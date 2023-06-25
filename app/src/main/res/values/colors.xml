@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="text_color">#252120</color>
+    <color name="bg_color">#FDFDFD</color>
+    <color name="brand_primary_color">#4D47A7</color>
+    <color name="brand_second_color">#D2E6FB</color>
+    <color name="brand_error_color">#C70039</color>
+    <color name="brand_fourth_color">#DAF7A6</color>
+    <color name="brand_fifth_color">#EDBEBD</color>
+    <color name="brand_successh_color">#57A773</color>
+    <color name="placeholder_color">#AFA8A6</color>
+</resources>
