@@ -11,14 +11,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -72,40 +78,89 @@ public class LoginActivity extends AppCompatActivity {
         input_password = findViewById(R.id.password_input) ;
         input_login = findViewById(R.id.login_input);;
         String password = input_password.getText().toString();
-        String login = input_login.getText().toString();
+        String email = input_login.getText().toString();
+
+        Map<String, String> params = new HashMap<String, String>();
+        //ADD PARAMS HERE
+        params.put("email", email);
 
         //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedPassword);
 
 
         RequestQueue rq = Volley.newRequestQueue(LoginActivity.this);
 
-        String url = "http://api.becomeacookmaster.live:9000";
+        String url = "http://api.becomeacookmaster.live:9000/user/password";
 
-        StringRequest query = new StringRequest(Request.Method.GET,
-                url,
-                new Response.Listener<String>() {
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST ,url, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-//                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
-
+                    public void onResponse(JSONObject response) {
                         try {
-                            JSONObject json = new JSONObject(response);
-                            String message = json.getString("message");
-                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                            System.out.println(response.has("password"));
+                            String hashed_password = response.getString("password");
+                            Toast.makeText(LoginActivity.this, hashed_password, Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
-
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(LoginActivity.this, "ERROR: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(LoginActivity.this, "ERROR: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+            }
+        }){
+        @Override
+            //ADD HEADERS TO REQUEST
+            public Map<String, String> getHeaders() throws AuthFailureError {
 
-                    }
-                }
-        );
-        rq.add(query);
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+            return params;
+        }
+               };
+
+//        StringRequest query = new StringRequest(Request.Method.POST,
+//                url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+////                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
+//
+//                        try {
+//                            JSONObject json = new JSONObject(response);
+//                            String message = json.getString("message");
+//                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+//                        } catch (Exception e) {
+//                            Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(LoginActivity.this, "ERROR: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                }
+//        ){
+//            @Override
+//            //ADD PARAMS TO POST REQUEST
+//            protected Map<String, String> getParams() {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("email", email);
+//                return params;
+//            }
+//
+//            @Override
+//            //ADD HEADERS TO REQUEST
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//
+//                Map<String, String>  params = new HashMap<String, String>();
+//                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+//                return params;
+//                }
+//        };
+        //rq.add(query);
     }
 }
