@@ -86,11 +86,12 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
 
                         try {
                             JSONObject json = new JSONObject(response);
-                            String url_image = json.getString("url");
+                            String message = json.getString("message");
+                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
