@@ -35,6 +35,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText input_password;
     private EditText input_login;
+    private String hashed_password;
+
+    private Client client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +87,6 @@ public class LoginActivity extends AppCompatActivity {
         //ADD PARAMS HERE
         params.put("email", email);
 
-        //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedPassword);
-
-
         RequestQueue rq = Volley.newRequestQueue(LoginActivity.this);
 
         String url = "http://api.becomeacookmaster.live:9000/user/password";
@@ -96,10 +96,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            System.out.println(response.has("password"));
-                            String hashed_password = response.getString("password");
-                            Toast.makeText(LoginActivity.this, hashed_password, Toast.LENGTH_SHORT).show();
-                        } catch (Exception e) {
+                            hashed_password = response.getString("password");
+
+                            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), (CharSequence) hashed_password);
+
+                            if (result.verified) {
+                                input_password.setText("");
+                                params.put("password", hashed_password);
+                                login(rq, (HashMap) params);
+                            } else {
+                                Toast.makeText(LoginActivity.this, "WRONG PASSWORD", Toast.LENGTH_SHORT).show();
+                            }
+                       } catch (Exception e) {
                             Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -117,50 +125,52 @@ public class LoginActivity extends AppCompatActivity {
             params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
             return params;
         }
-               };
+        };
+        rq.add(request_json);
 
-//        StringRequest query = new StringRequest(Request.Method.POST,
-//                url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-////                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
-//
-//                        try {
-//                            JSONObject json = new JSONObject(response);
-//                            String message = json.getString("message");
-//                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
-//                        } catch (Exception e) {
-//                            Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(LoginActivity.this, "ERROR: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
-//
-//                    }
-//                }
-//        ){
-//            @Override
-//            //ADD PARAMS TO POST REQUEST
-//            protected Map<String, String> getParams() {
-//                Map<String, String> params = new HashMap<String, String>();
-//                params.put("email", email);
-//                return params;
-//            }
-//
-//            @Override
-//            //ADD HEADERS TO REQUEST
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//
-//                Map<String, String>  params = new HashMap<String, String>();
-//                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
-//                return params;
-//                }
-//        };
-        //rq.add(query);
+    }
+
+    private void login( RequestQueue rq, HashMap params) {
+
+        String url = "http://api.becomeacookmaster.live:9000/user/login";
+        JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST , url, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (response.has("id")){
+                                int id = response.getInt("id");
+                                client = new Client(id) ;
+                                params.put("id", id);
+                                params.remove("email");
+                                params.remove("password");
+                                Toast.makeText(LoginActivity.this, "", Toast.LENGTH_SHORT).show();
+//                                setClientInfo(rq, client, params);
+                                Intent nextPage = new Intent(LoginActivity.this, LessonsActivity.class);
+                                startActivity(nextPage);
+                            } else {
+//                                nique ta mère.chais po
+                            }
+
+                        } catch (Exception e) {
+                            Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(LoginActivity.this, "ERROR: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            //ADD HEADERS TO REQUEST
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+                return params;
+            }
+        };
+        rq.add(request_json);
     }
 }
