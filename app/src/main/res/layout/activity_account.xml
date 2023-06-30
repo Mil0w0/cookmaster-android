@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AccountActivity"
+    android:background="@color/bg_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/brand_primary_color"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/toque_logo_medium_white">
+        </ImageView>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:textSize="24dp"
+        android:text="My account informations">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:id="@+id/client_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="">
+        </TextView>
+        <TextView
+            android:id="@+id/client_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="">
+        </TextView>
+
+        <Button
+            android:id="@+id/lessons_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/brand_primary_color"
+            android:layout_marginTop="16dp"
+            android:text="See all lessons">
+        </Button>
+
+        <Button
+            android:id="@+id/fidelity_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/brand_primary_color"
+            android:layout_marginTop="16dp"
+            android:text="My fidelity points">
+        </Button>
+
+    </LinearLayout>
+
+</LinearLayout>

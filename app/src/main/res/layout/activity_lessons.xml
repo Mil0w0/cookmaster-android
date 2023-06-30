@@ -23,12 +23,28 @@
             android:src="@drawable/toque_logo_medium_white">
         </ImageView>
     </LinearLayout>
-
-    <TextView
+<!--ADD SMTH THAT SAYS THE NUMBER OF LESSONS U CAN WATCH TODAY-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="24dp"
-        android:text="@string/ok">
-    </TextView>
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="Our chief lessons : "
+            android:textColor="@color/text_color"
+            android:textSize="24dp"></TextView>
+
+        <ListView
+            android:id="@+id/listLessons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

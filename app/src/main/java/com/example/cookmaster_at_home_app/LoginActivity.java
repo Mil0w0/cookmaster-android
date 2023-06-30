@@ -15,6 +15,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -108,13 +109,13 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "WRONG PASSWORD", Toast.LENGTH_SHORT).show();
                             }
                        } catch (Exception e) {
-                            Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "ERROR 4: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(LoginActivity.this, "ERROR: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "ERROR 3: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
             }
         }){
         @Override
@@ -130,31 +131,43 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void login( RequestQueue rq, HashMap params) {
+    private void login(RequestQueue rq, HashMap params) {
 
         String url = "http://api.becomeacookmaster.live:9000/user/login";
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST , url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            if (response.has("id")){
-                                int id = response.getInt("id");
-                                client = new Client(id) ;
-                                params.put("id", id);
-                                params.remove("email");
-                                params.remove("password");
-                                Toast.makeText(LoginActivity.this, "", Toast.LENGTH_SHORT).show();
-//                                setClientInfo(rq, client, params);
-                                Intent nextPage = new Intent(LoginActivity.this, LessonsActivity.class);
-                                startActivity(nextPage);
-                            } else {
-//                                nique ta mère.chais po
-                            }
 
-                        } catch (Exception e) {
-                            Toast.makeText(LoginActivity.this, "ERROR: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
-                        }
+                            if (response.has("id") && response.has("isblocked") && response.has("subscription") && response.has("role")){
+                                try {
+                                    int id = response.getInt("id");
+                                    String isblocked = response.getString("isblocked");
+                                    int subscription = response.getInt("subscription");
+                                    String role = response.getString("role");
+
+                                    client = new Client(id, isblocked, subscription, role, params.get("email").toString());
+
+                                    setClientInfo(rq, client);
+
+                                    Intent nextPage = new Intent(LoginActivity.this, AccountActivity.class);
+                                        nextPage.putExtra("fullname", client.getFullName());
+                                        nextPage.putExtra("email", client.getEmail());
+                                    startActivity(nextPage);
+                                }catch (JSONException je) {
+                                    Toast.makeText(LoginActivity.this, "ERROR json: %s".format(je.getMessage()), Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                if (response.has("error")){
+                                    try {
+                                        String error = response.getString("message");
+                                        int error_code = response.getInt("error");
+                                        Toast.makeText(LoginActivity.this, Integer.toString(error_code) +": "+ error, Toast.LENGTH_SHORT).show();
+                                    } catch (Exception e) {
+                                        Toast.makeText(LoginActivity.this, "ERROR 2: %s".format(e.getMessage()),Toast.LENGTH_SHORT).show();
+                                    }
+                                  }
+                            }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -172,5 +185,55 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         rq.add(request_json);
+    }
+
+    private void setClientInfo(RequestQueue rq, Client client) {
+    //GetUserByID
+
+        String url = "http://api.becomeacookmaster.live:9000/user/" + client.getId();
+
+        StringRequest query = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json_response = new JSONObject(response);
+                            if (json_response.has("error")){
+                                String error = json_response.getString("message");
+                                int error_code = json_response.getInt("error");
+                                Toast.makeText(LoginActivity.this, Integer.toString(error_code) +": "+ error, Toast.LENGTH_SHORT).show();
+                            } else {
+                                String lastname = json_response.getString("lastname");
+                                String firstname = json_response.getString("firstname");
+                                int language = json_response.getInt("language");
+
+                                client.setLastname(lastname);
+                                client.setFirstname(firstname);
+                                client.setLanguage(language);
+                            }
+                        }catch (Exception e){
+                            Toast.makeText(LoginActivity.this,"ERROR 2: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(LoginActivity.this,"ERROR: %s".format(error.toString()) , Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ){
+            @Override
+            //ADD HEADERS TO REQUEST
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+                return params;
+            }
+        };
+        rq.add(query);
     }
 }
