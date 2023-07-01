@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextPage = new Intent(MainActivity.this, LessonsActivity.class);
+                Intent nextPage = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(nextPage);
             }
         });

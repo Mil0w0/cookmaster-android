@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue rq = Volley.newRequestQueue(LoginActivity.this);
 
-        String url = "http://api.becomeacookmaster.live:9000/user/password";
+        String url = "https://api.becomeacookmaster.live:9000/user/password";
 
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST ,url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(RequestQueue rq, HashMap params) {
 
-        String url = "http://api.becomeacookmaster.live:9000/user/login";
+        String url = "https://api.becomeacookmaster.live:9000/user/login";
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST , url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -190,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setClientInfo(RequestQueue rq, Client client) {
     //GetUserByID
 
-        String url = "http://api.becomeacookmaster.live:9000/user/" + client.getId();
+        String url = "https://api.becomeacookmaster.live:9000/user/" + client.getId();
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,

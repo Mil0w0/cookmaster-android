@@ -55,7 +55,7 @@ public class LessonsActivity extends AppCompatActivity {
         RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
 
 
-        String url = "http://api.becomeacookmaster.live:9000/lesson/all";
+        String url = "https://api.becomeacookmaster.live:9000/lesson/all";
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
