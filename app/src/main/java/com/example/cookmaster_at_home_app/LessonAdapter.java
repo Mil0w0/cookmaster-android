@@ -44,21 +44,15 @@ public class LessonAdapter extends BaseAdapter {
         TextView lesson_name = convertView.findViewById(R.id.lesson_name);
         TextView lesson_description = convertView.findViewById(R.id.lesson_description);
         TextView lesson_author = convertView.findViewById(R.id.lesson_author);
-        LinearLayout starsLayout = convertView.findViewById(R.id.difficulty_stars);
+        TextView lesson_difficulty = convertView.findViewById(R.id.difficulty_number);
 
         Lesson current = (Lesson) getItem(position);
 
         lesson_name.setText(current.getName());
         lesson_description.setText("Description: "+current.getDescription());
-        lesson_author.setText("by " + current.getAuthor() + Integer.toString(current.getDifficulty()));
+        lesson_author.setText("by " + current.getAuthor());
+        lesson_difficulty.setText(Integer.toString(current.getDifficulty()));
 
-        int starSizeInPixels = convertView.getResources().getDimensionPixelSize(R.dimen.star_size);
-        for (int i = 0; i < current.getDifficulty(); i++) {
-            ImageView starImageView = new ImageView(context);
-            starImageView.setImageResource(R.drawable.star_icon_blue);
-            starImageView.setLayoutParams(new LinearLayout.LayoutParams(starSizeInPixels, starSizeInPixels));
-            starsLayout.addView(starImageView);
-        }
 
         return convertView;
     }

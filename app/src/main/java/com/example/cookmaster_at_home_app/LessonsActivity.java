@@ -39,17 +39,20 @@ public class LessonsActivity extends AppCompatActivity {
         debug = findViewById(R.id.title);
 
          this.lessons =  getLessons();
+         //or get it from the shared preferences if it's already there
+         // this.lessons =  getLessonsFromClient();
+
 //        List<Lesson> list =new ArrayList<>();
 //        list.add(new Lesson("Lesson name", 1, "Lesson description", "Lesson image", 2, "Lesson content", "Lesson author", "Lesson group"));
 //        list.add(new Lesson("Lesson name 2", 2, "Lesson description 2", "Lesson image", 4, "Lesson content", "Lesson author", "Lesson group"));
 //        this.lessons = list;
 
-// make the code pause a bit cuz the request is async if need be
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        // make the code pause a bit cuz the request is async if need be
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         LessonAdapter lesson_adapter = new LessonAdapter(this.lessons,LessonsActivity.this);
         listLessons.setAdapter(lesson_adapter);
@@ -77,14 +80,16 @@ public class LessonsActivity extends AppCompatActivity {
                             JSONArray json = new JSONArray(response);
                             for (int i = 0; i < json.length(); i++) {
                                 JSONObject obj = json.getJSONObject(i);
+                                int id = obj.getInt("idlesson");
                                 String name = obj.getString("name");
                                 String description = obj.getString("description");
                                 int difficulty = obj.getInt("difficulty");
                                 String content = obj.getString("content");
-                                int author = obj.getInt("iduser");
+                                String author_firstname = obj.getString("firstname");
+                                String author_lastname = obj.getString("lastname");
                                 int group = obj.getInt("idlessongroup");
                                 String image = obj.getString("picture");
-                                list.add(new Lesson(name, difficulty, description, image, 0, content, "Nino Plane", "Group 1"));
+                                list.add(new Lesson(name, id, description, image, difficulty, content, author_firstname + " " + author_lastname, "Group 1"));
                             }
                         }catch (Exception e){
                             Toast.makeText(LessonsActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
