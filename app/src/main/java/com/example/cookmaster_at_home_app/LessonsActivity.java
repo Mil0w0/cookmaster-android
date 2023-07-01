@@ -27,6 +27,7 @@ public class LessonsActivity extends AppCompatActivity {
 
     private List<Lesson> lessons;
     private ListView listLessons;
+    private TextView debug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +36,23 @@ public class LessonsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lessons);
         listLessons = findViewById(R.id.listLessons);
+        debug = findViewById(R.id.title);
 
-        //getLessons();
-        List<Lesson> list =new ArrayList<>();
-        list.add(new Lesson("Lesson name", 1, "Lesson description", "Lesson image", 2, "Lesson content", "Lesson author", "Lesson group"));
-        list.add(new Lesson("Lesson name 2", 2, "Lesson description 2", "Lesson image", 4, "Lesson content", "Lesson author", "Lesson group"));
-        this.lessons = list;
+         this.lessons =  getLessons();
+//        List<Lesson> list =new ArrayList<>();
+//        list.add(new Lesson("Lesson name", 1, "Lesson description", "Lesson image", 2, "Lesson content", "Lesson author", "Lesson group"));
+//        list.add(new Lesson("Lesson name 2", 2, "Lesson description 2", "Lesson image", 4, "Lesson content", "Lesson author", "Lesson group"));
+//        this.lessons = list;
 
-        LessonAdapter lesson_adapter = new LessonAdapter(list,LessonsActivity.this);
+// make the code pause a bit cuz the request is async if need be
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        LessonAdapter lesson_adapter = new LessonAdapter(this.lessons,LessonsActivity.this);
         listLessons.setAdapter(lesson_adapter);
-
-
 
     }
 
@@ -65,20 +72,22 @@ public class LessonsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         try {
-                            JSONObject json = new JSONObject(response);
-                            Toast.makeText(LessonsActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
-                            System.out.println(response.toString());
 
-                            JSONArray all = json.getJSONArray("lessons");
-//                            for (int i = 0; i < all.length(); i++) {
-//                                System.out.println(all.getJSONObject(i));
-//                            }
-
-//                        list.add(new Lesson(name, description, difficulty, content);
-//                        this.lessons = list;
-
+                           //Toast.makeText(LessonsActivity.this, response, Toast.LENGTH_SHORT).show();
+                            JSONArray json = new JSONArray(response);
+                            for (int i = 0; i < json.length(); i++) {
+                                JSONObject obj = json.getJSONObject(i);
+                                String name = obj.getString("name");
+                                String description = obj.getString("description");
+                                int difficulty = obj.getInt("difficulty");
+                                String content = obj.getString("content");
+                                int author = obj.getInt("iduser");
+                                int group = obj.getInt("idlessongroup");
+                                String image = obj.getString("picture");
+                                list.add(new Lesson(name, difficulty, description, image, 0, content, "Nino Plane", "Group 1"));
+                            }
                         }catch (Exception e){
-                            Toast.makeText(LessonsActivity.this,"ERROR1: %s".format(e.getMessage()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonsActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -87,7 +96,7 @@ public class LessonsActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null){
                             String errorMessage = new String(error.networkResponse.data);
-                            Toast.makeText(LessonsActivity.this,errorMessage, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonsActivity.this, "ok"+errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

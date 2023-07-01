@@ -40,6 +40,7 @@ public class LessonAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.lesson_row, null);
         }
+
         TextView lesson_name = convertView.findViewById(R.id.lesson_name);
         TextView lesson_description = convertView.findViewById(R.id.lesson_description);
         TextView lesson_author = convertView.findViewById(R.id.lesson_author);
@@ -48,8 +49,8 @@ public class LessonAdapter extends BaseAdapter {
         Lesson current = (Lesson) getItem(position);
 
         lesson_name.setText(current.getName());
-        lesson_description.setText(current.getDescription());
-        lesson_author.setText("by " + current.getAuthor());
+        lesson_description.setText("Description: "+current.getDescription());
+        lesson_author.setText("by " + current.getAuthor() + Integer.toString(current.getDifficulty()));
 
         int starSizeInPixels = convertView.getResources().getDimensionPixelSize(R.dimen.star_size);
         for (int i = 0; i < current.getDifficulty(); i++) {
