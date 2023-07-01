@@ -48,6 +48,8 @@ public class Lesson {
     public String getGroup() {
         return group;
     }
+
+    public String getContent() {return content;}
 }
 
 

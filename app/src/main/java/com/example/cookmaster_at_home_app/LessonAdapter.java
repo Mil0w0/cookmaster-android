@@ -53,7 +53,6 @@ public class LessonAdapter extends BaseAdapter {
         lesson_author.setText("by " + current.getAuthor());
         lesson_difficulty.setText(Integer.toString(current.getDifficulty()));
 
-
         return convertView;
     }
 }

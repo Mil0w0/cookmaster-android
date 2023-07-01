@@ -141,18 +141,33 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (response.has("id") && response.has("isblocked") && response.has("subscription") && response.has("role")){
                                 try {
+                                    Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                                     int id = response.getInt("id");
                                     String isblocked = response.getString("isblocked");
                                     int subscription = response.getInt("subscription");
                                     String role = response.getString("role");
 
-                                    client = new Client(id, isblocked, subscription, role, params.get("email").toString());
-
-                                    setClientInfo(rq, client);
-
+                                    //get subscription info
+                                    if (role.equals("client")){
+                                        SubscriptionCallback callback = new SubscriptionCallback(){
+                                            @Override
+                                            public void onSuccess(Subscription subscription) {
+                                                System.out.println("ok");
+//                                                client = new Client(id, isblocked, subscription, role, params.get("email").toString());
+//                                                setClientInfo(rq, client);
+                                            }
+                                            @Override
+                                            public void onError(String error) {
+                                                System.out.println("dommage");;
+                                            }
+                                        };
+                                        getSubscriptionInfo(rq, subscription, callback);
+                                    }
                                     Intent nextPage = new Intent(LoginActivity.this, AccountActivity.class);
-                                        nextPage.putExtra("fullname", client.getFullName());
-                                        nextPage.putExtra("email", client.getEmail());
+//                                        nextPage.putExtra("fullname", client.getFullName());
+//                                        nextPage.putExtra("email", client.getEmail());
+//                                        nextPage.putExtra("subscription_name", client.getSubscription().getName());
+//                                        nextPage.putExtra("subscription_maxlessonaccess", client.getSubscription().getMaxlessonaccess());
                                     startActivity(nextPage);
                                 }catch (JSONException je) {
                                     Toast.makeText(LoginActivity.this, "ERROR json: %s".format(je.getMessage()), Toast.LENGTH_SHORT).show();
@@ -185,6 +200,55 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         rq.add(request_json);
+    }
+
+    private void getSubscriptionInfo(RequestQueue rq, int subscriptionID, SubscriptionCallback callback) {
+        String url = "https://api.becomeacookmaster.live:9000/subscription/" + subscriptionID;
+        StringRequest query = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json_response = new JSONObject(response);
+                            if (json_response.has("error"))
+                            {
+                                String error = json_response.getString("message");
+                                int error_code = json_response.getInt("error");
+                                //callback.onError(Integer.toString(error_code) + ": " + error);
+                             }
+                                else
+                             {
+                                 Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
+                                String name = json_response.getString("name");
+                                Double price = json_response.getDouble("price");
+                                int maxlessonaccess = json_response.getInt("maxlessonaccess");
+                                //Subscription subscription = new Subscription(name, price, maxlessonaccess);
+                               // callback.onSuccess(subscription);
+                            }
+                        } catch (Exception e){
+                            Toast.makeText(LoginActivity.this,"ERROR 2: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(LoginActivity.this,"ERROR: %s".format(error.toString()) , Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ){
+            @Override
+            //ADD HEADERS TO REQUEST
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+                return params;
+            }
+        };
+        rq.add(query);
     }
 
     private void setClientInfo(RequestQueue rq, Client client) {

@@ -10,13 +10,14 @@ public class Client {
     private String profilepicture;
     private String firstname;
     private String lastname;
-    private int subscription;
-    public Client(int id, String isblocked, int subscription, String role, String email) {
+
+    private Subscription client_subscription;
+    public Client(int id, String isblocked, Subscription subscription, String role, String email) {
         this.id = id;
-        this.subscription = subscription;
         this.isblocked = isblocked;
         this.role = role;
         this.email = email;
+        this.client_subscription = subscription;
     }
 
     public int getId() {
@@ -27,8 +28,8 @@ public class Client {
         return firstname + " " + lastname;
     }
 
-    public int getSubscription() {
-        return subscription;
+    public Subscription getSubscription() {
+        return client_subscription;
     }
 
     public String getIsblocked() {

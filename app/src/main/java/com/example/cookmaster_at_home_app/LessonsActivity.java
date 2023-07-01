@@ -2,7 +2,10 @@ package com.example.cookmaster_at_home_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,11 +45,6 @@ public class LessonsActivity extends AppCompatActivity {
          //or get it from the shared preferences if it's already there
          // this.lessons =  getLessonsFromClient();
 
-//        List<Lesson> list =new ArrayList<>();
-//        list.add(new Lesson("Lesson name", 1, "Lesson description", "Lesson image", 2, "Lesson content", "Lesson author", "Lesson group"));
-//        list.add(new Lesson("Lesson name 2", 2, "Lesson description 2", "Lesson image", 4, "Lesson content", "Lesson author", "Lesson group"));
-//        this.lessons = list;
-
         // make the code pause a bit cuz the request is async if need be
         try {
             Thread.sleep(300);
@@ -56,6 +54,23 @@ public class LessonsActivity extends AppCompatActivity {
 
         LessonAdapter lesson_adapter = new LessonAdapter(this.lessons,LessonsActivity.this);
         listLessons.setAdapter(lesson_adapter);
+
+        listLessons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Lesson lesson = (Lesson) parent.getItemAtPosition(position) ;
+
+                Intent nextPage = new Intent(LessonsActivity.this, LessonActivity.class);
+                nextPage.putExtra("name",lesson.getName());
+                nextPage.putExtra("description", lesson.getDescription());
+                nextPage.putExtra("content", lesson.getContent());
+                nextPage.putExtra("author", lesson.getAuthor());
+                nextPage.putExtra("difficulty", lesson.getDifficulty());
+                nextPage.putExtra("picture", lesson.getImage());
+                //group/image/ytb to add?
+                startActivity(nextPage);
+            }
+        });
 
     }
 

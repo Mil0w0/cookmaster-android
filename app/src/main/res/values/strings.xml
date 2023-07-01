@@ -1,13 +1,13 @@
 <resources>
-        <string name="tokenAPI">TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd</string>
-        <string name="app_name">Cookmaster - At Home - App</string>
-        <string name="connect">CONNECT</string>
-        <string name="log_in">LOG IN</string>
-        <string name="email">Email</string>
-        <string name="email_placeholder">Enter your email</string>
-        <string name="password">Password</string>
-        <string name="password_placeholder">Enter your password</string>
-        <string name="ok">OK</string>
-        <string name="forgotten_password">Forgotten password ?</string>
-        <string name="create_account">Create an account ?</string>
+    <string name="tokenAPI">TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd</string>
+    <string name="app_name">Cookmaster - At Home - App</string>
+    <string name="connect">CONNECT</string>
+    <string name="log_in">LOG IN</string>
+    <string name="email">Email</string>
+    <string name="email_placeholder">Enter your email</string>
+    <string name="password">Password</string>
+    <string name="password_placeholder">Enter your password</string>
+    <string name="ok">OK</string>
+    <string name="forgotten_password">Forgotten password ?</string>
+    <string name="create_account">Create an account ?</string>
 </resources>

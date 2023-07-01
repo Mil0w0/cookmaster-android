@@ -14,6 +14,8 @@ import org.w3c.dom.Text;
 public class AccountActivity extends AppCompatActivity {
     TextView nom_text ;
     TextView email_text ;
+    TextView client_subscription_name;
+    TextView client_subscription_maxlessonaccess;
     Button btn_lessons;
     Button btn_fidelity;
 
@@ -23,16 +25,27 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         Bundle extras = getIntent().getExtras();
-        String clientFullname = extras.getString("fullname");
-        String clientEmail = extras.getString("email");
+        if (extras != null){
 
-        nom_text = findViewById(R.id.client_name);
-        nom_text.setText("Name : " + clientFullname);
+            String clientFullname = extras.getString("fullname");
+            String clientEmail = extras.getString("email");
+            String clientSubscriptionName = extras.getString("subscription_name");
+            int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
 
-        email_text = findViewById(R.id.client_email);
-        email_text.setText("Email : " + clientEmail);
+            nom_text = findViewById(R.id.client_name);
+            nom_text.setText("Name : " + clientFullname);
+
+            email_text = findViewById(R.id.client_email);
+            email_text.setText("Email : " + clientEmail);
 
 
+            client_subscription_name = findViewById(R.id.client_subscription_name);
+            client_subscription_name.setText("Subscription : " + clientSubscriptionName);
+
+            client_subscription_maxlessonaccess = findViewById(R.id.client_subscription_maxlessonaccess);
+            client_subscription_maxlessonaccess.setText("Max Lesson Access : " + Integer.toString(clientSubscriptionMaxLessons));
+
+        }
         btn_lessons = findViewById(R.id.lessons_button);
         btn_fidelity = findViewById(R.id.fidelity_button);
 
