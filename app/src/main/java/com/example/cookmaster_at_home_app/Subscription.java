@@ -22,4 +22,13 @@ public class Subscription {
     public int getMaxlessonaccess() {
         return maxlessonaccess;
     }
+
+    @Override
+    public String toString() {
+        return "Subscription{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", maxlessonaccess=" + maxlessonaccess +
+                '}';
+    }
 }

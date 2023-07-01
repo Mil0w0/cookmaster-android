@@ -28,10 +28,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/brand_primary_color"
         android:textSize="24dp"
         >
     </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:id="@+id/difficulty_stars"
+        android:gravity="center">
+        </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,41 +50,51 @@
         android:orientation="vertical"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="20dp">
+
+
         <TextView
             android:id="@+id/lesson_author"
             android:layout_width="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="18dp"
             android:layout_height="wrap_content"
             android:text="">
         </TextView>
         <TextView
             android:id="@+id/lesson_description"
+            android:textColor="@color/text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18dp"
             android:text="">
         </TextView>
         <TextView
             android:id="@+id/lesson_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="">
-        </TextView>
-        <TextView
-            android:id="@+id/lesson_difficulty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:textSize="18dp"
             android:text="">
         </TextView>
 
-        <Button
-            android:id="@+id/lessons_button"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/brand_primary_color"
-            android:layout_marginTop="16dp"
-            android:text="See all lessons from this group"
-            android:layout_gravity="bottom">
-        </Button>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp">
+            <Button
+                android:id="@+id/lessons_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/brand_primary_color"
+                android:textColor="@color/bg_color"
+                android:layout_marginTop="16dp"
+                android:text="See all lessons from this group"
+                android:layout_gravity="bottom">
+            </Button>
+
+        </LinearLayout>
 
     </LinearLayout>
 

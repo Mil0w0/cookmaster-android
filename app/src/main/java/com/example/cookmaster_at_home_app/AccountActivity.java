@@ -25,8 +25,8 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
-
+        if (extras != null) {
+            int user_id = extras.getInt("user_id");
             String clientFullname = extras.getString("fullname");
             String clientEmail = extras.getString("email");
             String clientSubscriptionName = extras.getString("subscription_name");
@@ -45,26 +45,30 @@ public class AccountActivity extends AppCompatActivity {
             client_subscription_maxlessonaccess = findViewById(R.id.client_subscription_maxlessonaccess);
             client_subscription_maxlessonaccess.setText("Max Lesson Access : " + Integer.toString(clientSubscriptionMaxLessons));
 
+
+            btn_lessons = findViewById(R.id.lessons_button);
+            btn_fidelity = findViewById(R.id.fidelity_button);
+
+            btn_lessons.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent nextPage = new Intent(AccountActivity.this, LessonsActivity.class);
+                    nextPage.putExtra("user_id", user_id);
+                    nextPage.putExtra("fullname", clientFullname);
+                    nextPage.putExtra("email",clientEmail);
+                    nextPage.putExtra("subscription_name", clientSubscriptionName);
+                    nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
+                    startActivity(nextPage);
+                }
+            });
+            btn_fidelity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: change intent when created
+                    Intent otherpage = new Intent(AccountActivity.this, LessonsActivity.class);
+                    startActivity(otherpage);
+                }
+            });
         }
-        btn_lessons = findViewById(R.id.lessons_button);
-        btn_fidelity = findViewById(R.id.fidelity_button);
-
-        btn_lessons.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextPage = new Intent(AccountActivity.this, LessonsActivity.class);
-               // nextPage.putExtra("userId", client.getId());
-                startActivity(nextPage);
-            }
-        });
-        btn_fidelity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: change intent when created
-                Intent otherpage = new Intent(AccountActivity.this, LessonsActivity.class);
-                startActivity(otherpage);
-            }
-        });
-
     }
 }

@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
 
             Map<String, String> params = new HashMap<String, String>();
-            params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+            params.put("Token", getResources().getString(R.string.tokenAPI));
             return params;
         }
         };
@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (response.has("id") && response.has("isblocked") && response.has("subscription") && response.has("role")){
                                 try {
-                                    Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                                     int id = response.getInt("id");
                                     String isblocked = response.getString("isblocked");
                                     int subscription = response.getInt("subscription");
@@ -152,9 +152,15 @@ public class LoginActivity extends AppCompatActivity {
                                         SubscriptionCallback callback = new SubscriptionCallback(){
                                             @Override
                                             public void onSuccess(Subscription subscription) {
-                                                System.out.println("ok");
-//                                                client = new Client(id, isblocked, subscription, role, params.get("email").toString());
-//                                                setClientInfo(rq, client);
+                                                client = new Client(id, isblocked, subscription, role, params.get("email").toString());
+                                                setClientInfo(rq, client);
+                                                Intent nextPage = new Intent(LoginActivity.this, AccountActivity.class);
+                                                nextPage.putExtra("user_id", client.getId());
+                                                nextPage.putExtra("fullname", client.getFullName());
+                                                nextPage.putExtra("email", client.getEmail());
+                                                nextPage.putExtra("subscription_name", client.getSubscription().getName());
+                                                nextPage.putExtra("subscription_maxlessonaccess", client.getSubscription().getMaxlessonaccess());
+                                                startActivity(nextPage);
                                             }
                                             @Override
                                             public void onError(String error) {
@@ -163,12 +169,6 @@ public class LoginActivity extends AppCompatActivity {
                                         };
                                         getSubscriptionInfo(rq, subscription, callback);
                                     }
-                                    Intent nextPage = new Intent(LoginActivity.this, AccountActivity.class);
-//                                        nextPage.putExtra("fullname", client.getFullName());
-//                                        nextPage.putExtra("email", client.getEmail());
-//                                        nextPage.putExtra("subscription_name", client.getSubscription().getName());
-//                                        nextPage.putExtra("subscription_maxlessonaccess", client.getSubscription().getMaxlessonaccess());
-                                    startActivity(nextPage);
                                 }catch (JSONException je) {
                                     Toast.makeText(LoginActivity.this, "ERROR json: %s".format(je.getMessage()), Toast.LENGTH_SHORT).show();
                                 }
@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
 
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+                params.put("Token", getResources().getString(R.string.tokenAPI));
                 return params;
             }
         };
@@ -219,12 +219,11 @@ public class LoginActivity extends AppCompatActivity {
                              }
                                 else
                              {
-                                 Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
                                 String name = json_response.getString("name");
                                 Double price = json_response.getDouble("price");
                                 int maxlessonaccess = json_response.getInt("maxlessonaccess");
-                                //Subscription subscription = new Subscription(name, price, maxlessonaccess);
-                               // callback.onSuccess(subscription);
+                                Subscription subscription = new Subscription(name, price, maxlessonaccess);
+                               callback.onSuccess(subscription);
                             }
                         } catch (Exception e){
                             Toast.makeText(LoginActivity.this,"ERROR 2: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
@@ -244,7 +243,7 @@ public class LoginActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
 
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+                params.put("Token", getResources().getString(R.string.tokenAPI));
                 return params;
             }
         };
@@ -294,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
 
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Token", "TTGMJe1gEaCGgcq5qtHxoUyulzIvkKhBloPP9HwOey3gpDeZnGeYBKCGbJUd");
+                params.put("Token", getResources().getString(R.string.tokenAPI));
                 return params;
             }
         };
