@@ -141,7 +141,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (response.has("id") && response.has("isblocked") && response.has("subscription") && response.has("role")){
                                 try {
-                                    //Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                                     int id = response.getInt("id");
                                     String isblocked = response.getString("isblocked");
                                     int subscription = response.getInt("subscription");

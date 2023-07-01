@@ -2,7 +2,10 @@ package com.example.cookmaster_at_home_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,7 +16,7 @@ public class LessonActivity extends AppCompatActivity {
     private TextView lesson_description;
     private TextView lesson_author;
     private TextView lesson_content;
-
+    private Button back_button;
 
     private ImageView lesson_image;
     @Override
@@ -21,13 +24,21 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
 
-        Bundle lesson = getIntent().getExtras();
-        String title = lesson.getString("name");
-        String description = lesson.getString("description");
-        String content = lesson.getString("content");
-        String author = lesson.getString("author");
-        int difficulty = lesson.getInt("difficulty");
+        Bundle extras = getIntent().getExtras();
+        String title = extras.getString("name");
+        int idlesson = extras.getInt("idlesson");
+        String description = extras.getString("description");
+        String content = extras.getString("content");
+        String author = extras.getString("author");
+        String image = extras.getString("picture");
+        int difficulty = extras.getInt("difficulty");
+        String clientFullname = extras.getString("fullname");
+        int clientId = extras.getInt("user_id");
+        String clientEmail = extras.getString("email");
+        String clientSubscriptionName = extras.getString("subscription_name");
+        int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
 
+        Lesson lesson = new Lesson(title, idlesson, description, image, difficulty, content, author, "Group 1");
 
         lesson_name = findViewById(R.id.lesson_title);
         lesson_description = findViewById(R.id.lesson_description);
@@ -49,5 +60,20 @@ public class LessonActivity extends AppCompatActivity {
         lesson_description.setText("Description: "+ description);
         lesson_author.setText("by " + author);
         lesson_content.setText(content);
+
+        back_button = findViewById(R.id.back_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextPage = new Intent(LessonActivity.this, LessonsActivity.class);
+                nextPage.putExtra("fullname", clientFullname);
+                nextPage.putExtra("user_id", clientId);
+                nextPage.putExtra("email", clientEmail);
+                nextPage.putExtra("subscription_name", clientSubscriptionName);
+                nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
+                //group/image/ytb to add?
+                startActivity(nextPage);
+            }
+        });
     }
 }

@@ -48,11 +48,12 @@ public class LessonsActivity extends AppCompatActivity {
         }
             else
         {
-            int clientId = extras.getInt("id");
+            int clientId = extras.getInt("user_id");
             String clientFullname = extras.getString("fullname");
             String clientEmail = extras.getString("email");
             String clientSubscriptionName = extras.getString("subscription_name");
-            int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
+//            int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
+            int clientSubscriptionMaxLessons = 5;
 
             listLessons = findViewById(R.id.listLessons);
             debug = findViewById(R.id.title);
@@ -68,39 +69,94 @@ public class LessonsActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-    //            $update['message'] = callAPI('/lesson/views/'.$currentUser['id'], 'delete');
-                //UPDATE CLIENT WATCHED LESSONS  (remove data older than a day)
-                updateClientWatchedLessons(clientId);
 
-            LessonAdapter lesson_adapter = new LessonAdapter(this.lessons,LessonsActivity.this);
-            listLessons.setAdapter(lesson_adapter);
+            RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
 
-            listLessons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            //UPDATE CLIENT WATCHED LESSONS  (remove entries older than a day)
+            updateClientWatchedLessons(rq, clientId);
+
+            LessonClientCallback callback = new LessonClientCallback(){
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onSuccess(int counter, List<Lesson> lessons) {
+//                    Toast.makeText(LessonsActivity.this, Integer.toString(counter), Toast.LENGTH_SHORT).show();
+                    LessonAdapter lesson_adapter = new LessonAdapter(lessons,LessonsActivity.this);
+                    listLessons.setAdapter(lesson_adapter);
 
-                    Lesson lesson = (Lesson) parent.getItemAtPosition(position) ;
-                    displayPopUp(clientFullname, clientEmail, clientSubscriptionName, clientSubscriptionMaxLessons, 0 ,lesson);
+                    //MAKE LESSONS CLICKABLE
+                    listLessons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            Lesson lesson = (Lesson) parent.getItemAtPosition(position) ;
+                            //CHECK IF USER ALREADY WATCHED HIS THING.
+                            hasAlreadyWatchLesson(clientId, lesson, new AlreadyWatchedCallback() {
+                                @Override
+                                public void onSuccess(boolean alreadyWatched, Lesson lesson) {
+                                    if (alreadyWatched || clientSubscriptionName.equals("Master"))
+                                    {
+                                        Toast.makeText(LessonsActivity.this, "You have unlimited access to this lesson today.", Toast.LENGTH_LONG).show();
+                                        Intent nextPage = new Intent(LessonsActivity.this, LessonActivity.class);
+                                        nextPage.putExtra("name",lesson.getName());
+                                        nextPage.putExtra("description", lesson.getDescription());
+                                        nextPage.putExtra("content", lesson.getContent());
+                                        nextPage.putExtra("author", lesson.getAuthor());
+                                        nextPage.putExtra("difficulty", lesson.getDifficulty());
+                                        nextPage.putExtra("picture", lesson.getImage());
+                                        //client extras might not need this:
+                                        nextPage.putExtra("fullname", clientFullname);
+                                        nextPage.putExtra("email", clientEmail);
+                                        nextPage.putExtra("subscription_name", clientSubscriptionName);
+                                        nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
+                                        //group/image/ytb to add?
+                                        startActivity(nextPage);
+                                    }
+                                    else
+                                    {
+                                        if (clientSubscriptionMaxLessons > counter) {
+                                            //USER CAN WATCH LESSON
+                                            displayPopUp(clientId, clientFullname, clientEmail, clientSubscriptionName, clientSubscriptionMaxLessons, counter ,lesson);
+                                        } else {
+                                            //USER CANNOT WATCH LESSON
+                                            Toast.makeText(LessonsActivity.this, "You have reached your daily limit of lessons ("+clientSubscriptionMaxLessons+"). Update your subscription or wait a bit", Toast.LENGTH_LONG).show();
+                                            //TODO : REDIRECT TO LESSONS HE CAN WATCH TODAY ?
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onError(String errorMessage) {
+                                    System.out.println("dommage");
+                                }
+                            });
+                        }
+                    });
                 }
-            });
+                @Override
+                public void onError(String error) {
+                    System.out.println("dommage");;
+                }
+            };
+            //GET CLIENT WATCHED LESSONS
+            countClientWatchedLessons(rq, clientId, callback);
 
         }
     }
-    private void updateClientWatchedLessons(int clientId){
+
+    private void hasAlreadyWatchLesson(int clientId, Lesson lesson, AlreadyWatchedCallback callback) {
         RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
 
+        String url = "https://api.becomeacookmaster.live:9000/lesson/watch/" + Integer.toString(clientId) + "/" + Integer.toString(lesson.getId());
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + clientId;
-
-        StringRequest query = new StringRequest(Request.Method.DELETE,
+        StringRequest query = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
-
                     @Override
                     public void onResponse(String response) {
 
                         try {
-                            Toast.makeText(LessonsActivity.this, response, Toast.LENGTH_SHORT).show();
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean alreadyWatched = jsonResponse.getBoolean("iswatched");
+                            callback.onSuccess(alreadyWatched, lesson);
                         } catch (Exception e) {
                             Toast.makeText(LessonsActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
@@ -111,7 +167,7 @@ public class LessonsActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null){
                             String errorMessage = new String(error.networkResponse.data);
-                            Toast.makeText(LessonsActivity.this, "NOT ok" + errorMessage, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonsActivity.this, url +"NOT ok" + errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -127,18 +183,99 @@ public class LessonsActivity extends AppCompatActivity {
             }
         };
         rq.add(query);
+    }
+
+    private void countClientWatchedLessons(RequestQueue rq, int clientId, LessonClientCallback callback) {
+
+        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + Integer.toString(clientId);
+
+        StringRequest query = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            int lessonWatched = jsonResponse.getInt("count");
+                            callback.onSuccess(lessonWatched, lessons);
+                        } catch (Exception e) {
+                            Toast.makeText(LessonsActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse != null){
+                            String errorMessage = new String(error.networkResponse.data);
+                            Toast.makeText(LessonsActivity.this, url +"NOT ok" + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+        ){
+            @Override
+            //ADD HEADERS TO REQUEST
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Token", getResources().getString(R.string.tokenAPI));
+                return params;
+            }
+        };
+        rq.add(query);
+    }
+
+    private void updateClientWatchedLessons(RequestQueue rq, int clientId){
+
+        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + Integer.toString(clientId);
+
+        StringRequest query = new StringRequest(Request.Method.DELETE,
+                url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse != null){
+                            String errorMessage = new String(error.networkResponse.data);
+                            Toast.makeText(LessonsActivity.this, url +"NOT ok" + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        ){
+            @Override
+            //ADD HEADERS TO REQUEST
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Token", getResources().getString(R.string.tokenAPI));
+                return params;
+            }
+        };
+        rq.add(query);
 
     }
-    public void displayPopUp(String clientFullname, String clientEmail, String clientSubscriptionName, int clientSubscriptionMaxLessons, int clientWatchedLessons, Lesson lesson){
+    public void displayPopUp(int clientId, String clientFullname, String clientEmail, String clientSubscriptionName, int clientSubscriptionMaxLessons, int clientWatchedLessons, Lesson lesson){
         new AlertDialog.Builder(LessonsActivity.this)
                 .setTitle(getResources().getString(R.string.confirm_show_lesson))
                 .setMessage("With your "+ clientSubscriptionName +" subscription, you have " + clientSubscriptionMaxLessons + " lessons access.\n You have watched " + clientWatchedLessons + " lessons today. Do you want to watch" + lesson.getName() + " ?")
                 .setPositiveButton(getResources().getString(R.string.popUpYes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //update client watched lessons
+                        ///client/watch/'.$currentUser['id'].'/'.$id, 'patch'
+                        increaseClientWatchedLessons(clientId, lesson.getId());
                         //go to the lesson page
                         Intent nextPage = new Intent(LessonsActivity.this, LessonActivity.class);
                         nextPage.putExtra("name",lesson.getName());
+                        nextPage.putExtra("idlesson",lesson.getId());
                         nextPage.putExtra("description", lesson.getDescription());
                         nextPage.putExtra("content", lesson.getContent());
                         nextPage.putExtra("author", lesson.getAuthor());
@@ -146,6 +283,7 @@ public class LessonsActivity extends AppCompatActivity {
                         nextPage.putExtra("picture", lesson.getImage());
                         //client extras might not need this:
                         nextPage.putExtra("fullname", clientFullname);
+                        nextPage.putExtra("user_id", clientId);
                         nextPage.putExtra("email", clientEmail);
                         nextPage.putExtra("subscription_name", clientSubscriptionName);
                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
@@ -162,6 +300,50 @@ public class LessonsActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
+    private void increaseClientWatchedLessons(int clientId, int lessonId) {
+
+        RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
+
+        String url = "https://api.becomeacookmaster.live:9000/client/watch/" + Integer.toString(clientId) + "/" + Integer.toString(lessonId);
+        StringRequest query = new StringRequest(Request.Method.PATCH,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            Toast.makeText(LessonsActivity.this, message, Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(LessonsActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse != null){
+                            String errorMessage = new String(error.networkResponse.data);
+                            Toast.makeText(LessonsActivity.this, url +"NOT ok" + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+        ){
+            @Override
+            //ADD HEADERS TO REQUEST
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Token", getResources().getString(R.string.tokenAPI));
+                return params;
+            }
+        };
+        rq.add(query);
+    }
+
     public List<Lesson> getLessons(){
         List<Lesson> list = new ArrayList<>();
         RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
