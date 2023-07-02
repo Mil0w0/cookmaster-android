@@ -27,7 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/brand_primary_color"
         android:textSize="24dp"
         android:text="My account informations">
     </TextView>
@@ -43,26 +44,39 @@
             android:id="@+id/client_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
             android:text="">
         </TextView>
         <TextView
             android:id="@+id/client_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
             android:text="">
         </TextView>
         <TextView
             android:id="@+id/client_subscription_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
             android:text="">
         </TextView>
         <TextView
             android:id="@+id/client_subscription_maxlessonaccess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
             android:text="">
         </TextView>
+
+        <CheckBox
+            android:id="@+id/auto_reconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/text_color"
+            android:text="Keep me logged in ?" />
+
 
         <Button
             android:id="@+id/lessons_button"
@@ -80,6 +94,14 @@
             android:backgroundTint="@color/brand_primary_color"
             android:layout_marginTop="16dp"
             android:text="My fidelity points">
+        </Button>
+        <Button
+            android:id="@+id/logout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/brand_error_color"
+            android:layout_marginTop="16dp"
+            android:text="Log out">
         </Button>
 
     </LinearLayout>

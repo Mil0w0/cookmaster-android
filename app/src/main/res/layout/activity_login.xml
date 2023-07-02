@@ -78,11 +78,21 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword" />
 
+    <CheckBox
+        android:id="@+id/auto_reconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="end"
+        android:text="Keep me logged in ?" />
+
+
     <Button
         android:id="@+id/connect_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="@color/brand_second_color"
         android:textColor="@color/text_color"
         android:padding="8dp"

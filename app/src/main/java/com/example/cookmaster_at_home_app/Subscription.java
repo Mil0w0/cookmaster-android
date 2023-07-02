@@ -1,14 +1,16 @@
 package com.example.cookmaster_at_home_app;
 
 public class Subscription {
+    private int id;
     private String name;
     private Double price;
     private int maxlessonaccess;
 
-    public Subscription(String name, Double price, int maxlessonaccess) {
+    public Subscription(int id,String name, Double price, int maxlessonaccess) {
         this.name = name;
         this.price = price;
         this.maxlessonaccess = maxlessonaccess;
+        this.id = id;
     }
 
     public String getName() {
@@ -30,5 +32,9 @@ public class Subscription {
                 ", price=" + price +
                 ", maxlessonaccess=" + maxlessonaccess +
                 '}';
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -3,8 +3,10 @@ package com.example.cookmaster_at_home_app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -53,13 +56,21 @@ public class LessonsActivity extends AppCompatActivity {
             String clientEmail = extras.getString("email");
             String clientSubscriptionName = extras.getString("subscription_name");
             int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
+            int clientSubscriptionId = extras.getInt("subscription_id");
 
             listLessons = findViewById(R.id.listLessons);
             debug = findViewById(R.id.title);
 
-             this.lessons =  getLessons();
-             //or get it from the shared preferences if it's already there
-             // this.lessons =  getLessonsFromClient();
+            //if we have internet connection we fetch the lessons from the server else from shared prefrences
+
+            if (false) {
+                this.lessons = getLessons();
+            } else {
+                System.out.println("no connection ok");
+                this.lessons = getLessonsFromSharedPrefrences();
+                LessonAdapter lesson_adapter = new LessonAdapter(lessons,LessonsActivity.this);
+                listLessons.setAdapter(lesson_adapter);
+            }
 
             // make the code pause a bit cuz the request is async if need be
             //replace this with a callback ?
@@ -77,7 +88,6 @@ public class LessonsActivity extends AppCompatActivity {
             LessonClientCallback callback = new LessonClientCallback(){
                 @Override
                 public void onSuccess(int counter, List<Lesson> lessons) {
-//                    Toast.makeText(LessonsActivity.this, Integer.toString(counter), Toast.LENGTH_SHORT).show();
                     LessonAdapter lesson_adapter = new LessonAdapter(lessons,LessonsActivity.this);
                     listLessons.setAdapter(lesson_adapter);
 
@@ -107,6 +117,7 @@ public class LessonsActivity extends AppCompatActivity {
                                         nextPage.putExtra("user_id", clientId);
                                         nextPage.putExtra("email", clientEmail);
                                         nextPage.putExtra("subscription_name", clientSubscriptionName);
+                                        nextPage.putExtra("subscription_id", clientSubscriptionId);
                                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
                                         //group/image/ytb to add?
                                         startActivity(nextPage);
@@ -115,7 +126,7 @@ public class LessonsActivity extends AppCompatActivity {
                                     {
                                         if (clientSubscriptionMaxLessons > counter) {
                                             //USER CAN WATCH LESSON
-                                            displayPopUp(clientId, clientFullname, clientEmail, clientSubscriptionName, clientSubscriptionMaxLessons, counter ,lesson);
+                                            displayPopUp(clientId, clientSubscriptionId, clientFullname, clientEmail, clientSubscriptionName, clientSubscriptionMaxLessons, counter ,lesson);
                                         } else {
                                             //USER CANNOT WATCH LESSON
                                             Toast.makeText(LessonsActivity.this, "You have reached your daily limit of lessons ("+clientSubscriptionMaxLessons+"). Update your subscription or wait a bit", Toast.LENGTH_LONG).show();
@@ -142,7 +153,6 @@ public class LessonsActivity extends AppCompatActivity {
 
         }
     }
-
     private void hasAlreadyWatchLesson(int clientId, Lesson lesson, AlreadyWatchedCallback callback) {
         RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
 
@@ -263,7 +273,7 @@ public class LessonsActivity extends AppCompatActivity {
         rq.add(query);
 
     }
-    public void displayPopUp(int clientId, String clientFullname, String clientEmail, String clientSubscriptionName, int clientSubscriptionMaxLessons, int clientWatchedLessons, Lesson lesson){
+    public void displayPopUp(int clientId,int clientSubscriptionId, String clientFullname, String clientEmail, String clientSubscriptionName, int clientSubscriptionMaxLessons, int clientWatchedLessons, Lesson lesson){
         new AlertDialog.Builder(LessonsActivity.this)
                 .setTitle(getResources().getString(R.string.confirm_show_lesson))
                 .setMessage("With your " + clientSubscriptionName +" subscription, you have " + clientSubscriptionMaxLessons + " lessons access.\nYou have watched " + clientWatchedLessons + " lessons today. Do you want to watch " + lesson.getName() + " ?")
@@ -287,6 +297,7 @@ public class LessonsActivity extends AppCompatActivity {
                         nextPage.putExtra("user_id", clientId);
                         nextPage.putExtra("email", clientEmail);
                         nextPage.putExtra("subscription_name", clientSubscriptionName);
+                        nextPage.putExtra("subscription_id", clientSubscriptionId);
                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
                         //group/image/ytb to add?
                         startActivity(nextPage);
@@ -345,6 +356,31 @@ public class LessonsActivity extends AppCompatActivity {
         rq.add(query);
     }
 
+    private List<Lesson> getLessonsFromSharedPrefrences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("lessons", Context.MODE_PRIVATE);
+        List<Lesson> list = new ArrayList<>();
+
+        try {
+            JSONArray json = new JSONArray(sharedPreferences.getString("lessons", null));
+
+            for (int i = 0; i < json.length(); i++) {
+                JSONObject obj = json.getJSONObject(i);
+                int id = obj.getInt("idlesson");
+                String name = obj.getString("name");
+                String description = obj.getString("description");
+                int difficulty = obj.getInt("difficulty");
+                String content = obj.getString("content");
+                String author_firstname = obj.getString("firstname");
+                String author_lastname = obj.getString("lastname");
+                int group = obj.getInt("idlessongroup");
+                String image = obj.getString("picture");
+                list.add(new Lesson(name, id, description, image, difficulty, content, author_firstname + " " + author_lastname, group));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     public List<Lesson> getLessons(){
         List<Lesson> list = new ArrayList<>();
         RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
@@ -361,8 +397,17 @@ public class LessonsActivity extends AppCompatActivity {
 
                         try {
 
-                           //Toast.makeText(LessonsActivity.this, response, Toast.LENGTH_SHORT).show();
                             JSONArray json = new JSONArray(response);
+
+                            //SAVE DATA SO WE CAN STILL SEE IT OFFLINE if it is not the same string.
+                            SharedPreferences sharedPreferences = getSharedPreferences("lessons", Context.MODE_PRIVATE);
+
+                            if (!sharedPreferences.getString("lessons", "null").equals(response)){
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("lessons", json.toString());
+                                editor.apply();
+                            }
+
                             for (int i = 0; i < json.length(); i++) {
                                 JSONObject obj = json.getJSONObject(i);
                                 int id = obj.getInt("idlesson");
@@ -376,6 +421,7 @@ public class LessonsActivity extends AppCompatActivity {
                                 String image = obj.getString("picture");
                                 list.add(new Lesson(name, id, description, image, difficulty, content, author_firstname + " " + author_lastname, group));
                             }
+
                         }catch (Exception e){
                             Toast.makeText(LessonsActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
                         }

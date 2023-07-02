@@ -3,8 +3,10 @@ package com.example.cookmaster_at_home_app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -400,6 +402,7 @@ public class LessonActivity extends AppCompatActivity {
                         try {
 
                             JSONArray json = new JSONArray(response);
+
                             for (int i = 0; i < json.length(); i++) {
                                 JSONObject obj = json.getJSONObject(i);
                                 int id = obj.getInt("idlesson");

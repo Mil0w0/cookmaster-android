@@ -20,6 +20,17 @@ public class Client {
         this.client_subscription = subscription;
     }
 
+    public Client(String isblocked, int id, String email, int language, String profilepicture, String firstname, String lastname, Subscription client_subscription) {
+        this.isblocked = isblocked;
+        this.id = id;
+        this.email = email;
+        this.language = language;
+        this.profilepicture = profilepicture;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.client_subscription = client_subscription;
+    }
+
     public int getId() {
         return id;
     }
