@@ -52,8 +52,7 @@ public class LessonsActivity extends AppCompatActivity {
             String clientFullname = extras.getString("fullname");
             String clientEmail = extras.getString("email");
             String clientSubscriptionName = extras.getString("subscription_name");
-//            int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
-            int clientSubscriptionMaxLessons = 5;
+            int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
 
             listLessons = findViewById(R.id.listLessons);
             debug = findViewById(R.id.title);
@@ -104,6 +103,7 @@ public class LessonsActivity extends AppCompatActivity {
                                         nextPage.putExtra("picture", lesson.getImage());
                                         //client extras might not need this:
                                         nextPage.putExtra("fullname", clientFullname);
+                                        nextPage.putExtra("user_id", clientId);
                                         nextPage.putExtra("email", clientEmail);
                                         nextPage.putExtra("subscription_name", clientSubscriptionName);
                                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
