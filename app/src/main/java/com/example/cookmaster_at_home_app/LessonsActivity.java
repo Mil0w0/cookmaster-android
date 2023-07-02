@@ -266,12 +266,11 @@ public class LessonsActivity extends AppCompatActivity {
     public void displayPopUp(int clientId, String clientFullname, String clientEmail, String clientSubscriptionName, int clientSubscriptionMaxLessons, int clientWatchedLessons, Lesson lesson){
         new AlertDialog.Builder(LessonsActivity.this)
                 .setTitle(getResources().getString(R.string.confirm_show_lesson))
-                .setMessage("With your "+ clientSubscriptionName +" subscription, you have " + clientSubscriptionMaxLessons + " lessons access.\n You have watched " + clientWatchedLessons + " lessons today. Do you want to watch" + lesson.getName() + " ?")
+                .setMessage("With your " + clientSubscriptionName +" subscription, you have " + clientSubscriptionMaxLessons + " lessons access.\nYou have watched " + clientWatchedLessons + " lessons today. Do you want to watch " + lesson.getName() + " ?")
                 .setPositiveButton(getResources().getString(R.string.popUpYes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //update client watched lessons
-                        ///client/watch/'.$currentUser['id'].'/'.$id, 'patch'
                         increaseClientWatchedLessons(clientId, lesson.getId());
                         //go to the lesson page
                         Intent nextPage = new Intent(LessonsActivity.this, LessonActivity.class);

@@ -1,5 +1,10 @@
 package com.example.cookmaster_at_home_app;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
+import java.util.List;
+
 public class Lesson {
     private String name;
     private int id;
@@ -18,6 +23,16 @@ public class Lesson {
         this.difficulty = difficulty;
         this.content = content;
         this.author = author;
+        this.group = group_id;
+    }
+
+    public Lesson(String name, int id, String description, String image, int difficulty, String content, int group_id) {
+        this.name = name;
+        this.id = id;
+        this.description = description;
+        this.image = image;
+        this.difficulty = difficulty;
+        this.content = content;
         this.group = group_id;
     }
 

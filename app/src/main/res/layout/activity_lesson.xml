@@ -84,6 +84,16 @@
             android:text="">
         </TextView>
 
+        <TextView
+            android:id="@+id/title_group_lessons"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/brand_primary_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="All lessons from the group :">
+        </TextView>
+
         <ListView
         android:id="@+id/listGroupLessons"
         android:layout_width="match_parent"
@@ -104,16 +114,16 @@
                 android:layout_marginTop="16dp"
                 android:text="Back to all lessons">
             </Button>
-            <Button
-                android:id="@+id/lessons_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/brand_primary_color"
-                android:textColor="@color/bg_color"
-                android:layout_marginTop="16dp"
-                android:text="See all lessons from this group"
-                android:layout_gravity="bottom">
-            </Button>
+<!--            <Button-->
+<!--                android:id="@+id/lessons_button"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:backgroundTint="@color/brand_primary_color"-->
+<!--                android:textColor="@color/bg_color"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="See all lessons from this group"-->
+<!--                android:layout_gravity="bottom">-->
+<!--            </Button>-->
 
         </LinearLayout>
 
