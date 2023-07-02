@@ -8,9 +8,9 @@ public class Lesson {
     private int difficulty;
     private String content;
     private String author;
-    private String group;
+    private int group;
 
-    public Lesson(String name, int id, String description, String image, int difficulty, String content, String author, String group) {
+    public Lesson(String name, int id, String description, String image, int difficulty, String content, String author, int group_id) {
         this.name = name;
         this.id = id;
         this.description = description;
@@ -18,7 +18,7 @@ public class Lesson {
         this.difficulty = difficulty;
         this.content = content;
         this.author = author;
-        this.group = group;
+        this.group = group_id;
     }
 
     public String getName() {
@@ -45,7 +45,7 @@ public class Lesson {
         return author;
     }
 
-    public String getGroup() {
+    public int getGroup() {
         return group;
     }
 

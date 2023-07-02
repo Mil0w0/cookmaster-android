@@ -101,6 +101,7 @@ public class LessonsActivity extends AppCompatActivity {
                                         nextPage.putExtra("author", lesson.getAuthor());
                                         nextPage.putExtra("difficulty", lesson.getDifficulty());
                                         nextPage.putExtra("picture", lesson.getImage());
+                                        nextPage.putExtra("id_group", lesson.getGroup());
                                         //client extras might not need this:
                                         nextPage.putExtra("fullname", clientFullname);
                                         nextPage.putExtra("user_id", clientId);
@@ -281,6 +282,7 @@ public class LessonsActivity extends AppCompatActivity {
                         nextPage.putExtra("author", lesson.getAuthor());
                         nextPage.putExtra("difficulty", lesson.getDifficulty());
                         nextPage.putExtra("picture", lesson.getImage());
+                        nextPage.putExtra("id_group", lesson.getGroup());
                         //client extras might not need this:
                         nextPage.putExtra("fullname", clientFullname);
                         nextPage.putExtra("user_id", clientId);
@@ -373,7 +375,7 @@ public class LessonsActivity extends AppCompatActivity {
                                 String author_lastname = obj.getString("lastname");
                                 int group = obj.getInt("idlessongroup");
                                 String image = obj.getString("picture");
-                                list.add(new Lesson(name, id, description, image, difficulty, content, author_firstname + " " + author_lastname, "Group 1"));
+                                list.add(new Lesson(name, id, description, image, difficulty, content, author_firstname + " " + author_lastname, group));
                             }
                         }catch (Exception e){
                             Toast.makeText(LessonsActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();

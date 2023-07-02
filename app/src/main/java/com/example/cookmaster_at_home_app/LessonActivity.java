@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class LessonActivity extends AppCompatActivity {
 
@@ -17,6 +20,9 @@ public class LessonActivity extends AppCompatActivity {
     private TextView lesson_author;
     private TextView lesson_content;
     private Button back_button;
+
+    private ListView lessonGroupListView;
+    private List<Lesson> GroupLessons;
 
     private ImageView lesson_image;
     @Override
@@ -33,12 +39,13 @@ public class LessonActivity extends AppCompatActivity {
         String image = extras.getString("picture");
         int difficulty = extras.getInt("difficulty");
         String clientFullname = extras.getString("fullname");
+        int groupId = extras.getInt("group_id");
         int clientId = extras.getInt("user_id");
         String clientEmail = extras.getString("email");
         String clientSubscriptionName = extras.getString("subscription_name");
         int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
 
-        Lesson lesson = new Lesson(title, idlesson, description, image, difficulty, content, author, "Group 1");
+        Lesson lesson = new Lesson(title, idlesson, description, image, difficulty, content, author, groupId);
 
         lesson_name = findViewById(R.id.lesson_title);
         lesson_description = findViewById(R.id.lesson_description);
@@ -60,6 +67,12 @@ public class LessonActivity extends AppCompatActivity {
         lesson_description.setText("Description: "+ description);
         lesson_author.setText("by " + author);
         lesson_content.setText(content);
+
+        //DISPLAY ALL LESSONS FROM THE GROUP
+        lessonGroupListView = findViewById(R.id.listGroupLessons);
+        LessonAdapter lesson_adapter = new LessonAdapter(GroupLessons,LessonActivity.this);
+        lessonGroupListView.setAdapter(lesson_adapter);
+
 
         back_button = findViewById(R.id.back_button);
         back_button.setOnClickListener(new View.OnClickListener() {
