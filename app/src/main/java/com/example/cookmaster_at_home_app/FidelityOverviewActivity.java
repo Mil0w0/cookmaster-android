@@ -2,10 +2,17 @@ package com.example.cookmaster_at_home_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -33,6 +40,11 @@ public class FidelityOverviewActivity extends AppCompatActivity {
     private TextView needed_points;
     private ImageButton about_fidelity;
     private ImageView stage50,stage110,stage180;
+
+    NfcAdapter nfcAdapter;
+    PendingIntent pendingIntent;
+
+    final static String TAG = "nfc_test"; //debug
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +53,16 @@ public class FidelityOverviewActivity extends AppCompatActivity {
         int user_id = getIntent().getIntExtra("user_id", -1);
         int subscriptionId = getIntent().getIntExtra("subscription_id", -1);
 
+        nfcAdapter = NfcAdapter.getDefaultAdapter(FidelityOverviewActivity.this);
+
+        //DEBUGGING: CHECK IF NFC IS AVAILABLE
+        if(nfcAdapter != null && nfcAdapter.isEnabled()){
+            Toast.makeText(this, "NFC available!", Toast.LENGTH_LONG).show();
+        }
+        //Create a PendingIntent object so the Android system can
+        //populate it with the details of the tag when it is scanned.
+
+        pendingIntent = PendingIntent.getActivity(FidelityOverviewActivity.this, 0, new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_IMMUTABLE);
 
         btn_rewards = findViewById(R.id.stages_btn);
         txt_fidelity_points = findViewById(R.id.user_fidelity_points);
@@ -103,6 +125,32 @@ public class FidelityOverviewActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        assert nfcAdapter != null;
+        nfcAdapter.enableForegroundDispatch(FidelityOverviewActivity.this,pendingIntent,null,null);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(FidelityOverviewActivity.this);
+        }
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+            Toast.makeText(this, "NFC intent received!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "NFC intent received but not tag discovered!", Toast.LENGTH_LONG).show();
+        }
+    }
 
     private void getFidelityPoints(int user_id, FidelityCallback callback) {
 
