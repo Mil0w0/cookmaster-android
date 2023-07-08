@@ -120,9 +120,8 @@ public class AccountActivity extends AppCompatActivity {
                             btn_fidelity.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    //TODO: change intent when created
-//                                    Intent otherpage = new Intent(AccountActivity.this, LessonsActivity.class);
-//                                    startActivity(otherpage);
+                                    Intent otherpage = new Intent(AccountActivity.this, FidelityOverviewActivity.class);
+                                    startActivity(otherpage);
                                 }
                             });
                             log_out.setOnClickListener(new View.OnClickListener() {
