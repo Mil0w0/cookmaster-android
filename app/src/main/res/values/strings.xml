@@ -14,4 +14,8 @@
     <string name="confirm_show_lesson">Do you want to see this lesson ?</string>
     <string name="popUpYes">Yes</string>
     <string name="popUpNo">No</string>
+
+    <string name="fidelity_title">Manage your fidelity points</string>
+    <string name="rewards_stages">Check out rewards</string>
+    <string name="fidelity_stages">Unlock rewards by stages </string>
 </resources>
