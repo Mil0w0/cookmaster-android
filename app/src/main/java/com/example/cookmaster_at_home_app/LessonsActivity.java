@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ public class LessonsActivity extends AppCompatActivity {
     private ListView listLessons;
     private TextView debug;
 
+    private Button settingsButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +60,23 @@ public class LessonsActivity extends AppCompatActivity {
             String clientSubscriptionName = extras.getString("subscription_name");
             int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
             int clientSubscriptionId = extras.getInt("subscription_id");
+            boolean auto_reconnect = extras.getBoolean("auto_reconnect");
 
             listLessons = findViewById(R.id.listLessons);
             debug = findViewById(R.id.title);
-
+            settingsButton = findViewById(R.id.settings_button);
             //if we have internet connection we fetch the lessons from the server else from shared prefrences
+
+            settingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent nextPage = new Intent(LessonsActivity.this, AccountActivity.class);
+                    nextPage.putExtra("user_id", clientId);
+                    nextPage.putExtra("subscription_id", clientSubscriptionId);
+                    nextPage.putExtra("auto_reconnect", auto_reconnect);
+                    startActivity(nextPage);
+                }
+            });
 
             if (false) {
                 this.lessons = getLessons();
@@ -299,6 +314,7 @@ public class LessonsActivity extends AppCompatActivity {
                         nextPage.putExtra("subscription_name", clientSubscriptionName);
                         nextPage.putExtra("subscription_id", clientSubscriptionId);
                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
+                        nextPage.putExtra("auto_reconnect", getIntent().getBooleanExtra("auto_reconnect", false));
                         //group/image/ytb to add?
                         startActivity(nextPage);
                     }

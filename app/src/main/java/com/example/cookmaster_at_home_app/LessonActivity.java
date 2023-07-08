@@ -40,6 +40,7 @@ public class LessonActivity extends AppCompatActivity {
     private TextView lesson_author;
     private TextView lesson_content;
     private Button back_button;
+    private Button settingsButton;
 
     private ListView lessonGroupListView;
     private List<Lesson> GroupLessons;
@@ -62,8 +63,22 @@ public class LessonActivity extends AppCompatActivity {
         int groupId = extras.getInt("id_group");
         int clientId = extras.getInt("user_id");
         String clientEmail = extras.getString("email");
+        int clientSubscriptionId = extras.getInt("subscription_id");
         String clientSubscriptionName = extras.getString("subscription_name");
         int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
+        boolean auto_reconnect = extras.getBoolean("auto_reconnect");
+
+        settingsButton = findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextPage = new Intent(LessonActivity.this, AccountActivity.class);
+                nextPage.putExtra("user_id", clientId);
+                nextPage.putExtra("subscription_id", clientSubscriptionId);
+                nextPage.putExtra("auto_reconnect", auto_reconnect);
+                startActivity(nextPage);
+            }
+        });
 
         Lesson lesson = new Lesson(title, idlesson, description, image, difficulty, content, author, groupId);
 

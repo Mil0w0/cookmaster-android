@@ -113,6 +113,7 @@ public class AccountActivity extends AppCompatActivity {
                                     nextPage.putExtra("subscription_name", client.getSubscription().getName());
                                     nextPage.putExtra("subscription_id", client.getSubscription().getId());
                                     nextPage.putExtra("subscription_maxlessonaccess", client.getSubscription().getMaxlessonaccess());
+                                    nextPage.putExtra("auto_reconnect", auto_reconnect);
                                     startActivity(nextPage);
                                 }
                             });

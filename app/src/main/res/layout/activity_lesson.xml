@@ -22,10 +22,29 @@
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
+            android:layout_gravity="center"
             android:src="@drawable/toque_logo_medium_white">
         </ImageView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button android:id="@+id/settings_button"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:backgroundTint="@color/brand_primary_color" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/settings_icon_white"/>
+        </FrameLayout>
+
     </LinearLayout>
 
     <TextView
