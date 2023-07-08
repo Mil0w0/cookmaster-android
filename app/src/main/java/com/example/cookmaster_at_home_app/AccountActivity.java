@@ -121,6 +121,8 @@ public class AccountActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Intent otherpage = new Intent(AccountActivity.this, FidelityOverviewActivity.class);
+                                    otherpage.putExtra("user_id", user_id);
+                                    otherpage.putExtra("subscription_id", client.getSubscription().getId());
                                     startActivity(otherpage);
                                 }
                             });
@@ -200,9 +202,9 @@ public class AccountActivity extends AppCompatActivity {
                 btn_fidelity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO: change intent when created
-//                        Intent otherpage = new Intent(AccountActivity.this, MainFidelity.class);
-//                        startActivity(otherpage);
+                        Intent otherpage = new Intent(AccountActivity.this, FidelityOverviewActivity.class);
+                        otherpage.putExtra("user_id", user_id);
+                        startActivity(otherpage);
                     }
                 });
                 log_out.setOnClickListener(new View.OnClickListener() {

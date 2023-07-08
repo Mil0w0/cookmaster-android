@@ -10,6 +10,7 @@ public class Client {
     private String profilepicture;
     private String firstname;
     private String lastname;
+    private int fidelity_points;
 
     private Subscription client_subscription;
     public Client(int id, String isblocked, Subscription subscription, String role, String email) {
@@ -18,6 +19,14 @@ public class Client {
         this.role = role;
         this.email = email;
         this.client_subscription = subscription;
+    }
+
+    public Client(int id, String email, String firstname, String lastname, int fidelity_points) {
+        this.id = id;
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.fidelity_points = fidelity_points;
     }
 
     public Client(String isblocked, int id, String email, int language, String profilepicture, String firstname, String lastname, Subscription client_subscription) {
@@ -76,6 +85,10 @@ public class Client {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public int getFidelity_points() {
+        return fidelity_points;
     }
 
     @Override
