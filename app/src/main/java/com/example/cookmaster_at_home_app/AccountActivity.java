@@ -123,6 +123,7 @@ public class AccountActivity extends AppCompatActivity {
                                     Intent otherpage = new Intent(AccountActivity.this, FidelityOverviewActivity.class);
                                     otherpage.putExtra("user_id", user_id);
                                     otherpage.putExtra("subscription_id", client.getSubscription().getId());
+                                    otherpage.putExtra("auto_reconnect", auto_reconnect);
                                     startActivity(otherpage);
                                 }
                             });
@@ -204,6 +205,8 @@ public class AccountActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent otherpage = new Intent(AccountActivity.this, FidelityOverviewActivity.class);
                         otherpage.putExtra("user_id", user_id);
+                        otherpage.putExtra("subscription_id", clientSubscriptionId);
+                        otherpage.putExtra("auto_reconnect", auto_reconnect);
                         startActivity(otherpage);
                     }
                 });

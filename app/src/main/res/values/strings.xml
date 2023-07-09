@@ -18,4 +18,9 @@
     <string name="fidelity_title">Manage your fidelity points</string>
     <string name="rewards_stages">Check our rewards</string>
     <string name="fidelity_stages">Unlock rewards by stages </string>
+    <string name="fidelity_game_title"> Let\'s get cooking ! </string>
+    <string name="fidelity_game_description"> Get more fidelity points once a day by answering the following question right ! </string>
+    <string name="fidelity_game_question"> What is the name of the first ever lesson of Cookmaster? </string>
+    <string name="fidelity_game_hint">Eg: champagne for everyone</string>
+
 </resources>

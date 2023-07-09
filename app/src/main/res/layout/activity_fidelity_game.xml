@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".FidelityOverviewActivity"
+    tools:context=".FidelityGameActivity"
     android:background="@color/bg_color">
     >
 
@@ -44,23 +44,62 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/fidelity_game_layout"
         android:orientation="vertical"
         android:layout_margin="32dp">
 
+        <nl.dionsegijn.konfetti.xml.KonfettiView
+            android:id="@+id/konfettiView"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/rewards_stages_title"
+            android:text="@string/fidelity_game_title"
             android:gravity="center"
             android:textColor="@color/brand_primary_color"
             android:textSize="24dp">
         </TextView>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rewards50_recycler_view">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:text="@string/fidelity_game_description"
+            android:gravity="center"
+            android:textColor="@color/brand_primary_color"
+            android:textSize="16dp">
+        </TextView>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="16dp"
+            android:layout_marginTop="60dp"
+            android:text="@string/fidelity_game_question"
+            android:gravity="center">
+        </TextView>
+
+        <EditText
+            android:id="@+id/fidelity_game_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/fidelity_game_hint"
+            android:inputType="text"
+            android:gravity="center">
+        </EditText>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:layout_gravity="right"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/brand_primary_color"
+            android:textColor="@color/bg_color"
+            android:id="@+id/fidelity_game_button">
+            </Button>
     </LinearLayout>
 </LinearLayout>

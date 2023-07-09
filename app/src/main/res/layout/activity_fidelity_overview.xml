@@ -46,11 +46,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_margin="32dp">
+
+        <nl.dionsegijn.konfetti.xml.KonfettiView
+            android:id="@+id/konfettiView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/fidelity_title"
-            android:layout_marginTop="32dp"
             android:gravity="center"
             android:textColor="@color/brand_primary_color"
             android:textSize="24dp">
@@ -115,10 +120,23 @@
             </ImageView>
         </LinearLayout>
 
+        <Button
+            android:id="@+id/secret_game_btn"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Secret game"
+            android:backgroundTint="@color/brand_error_color"
+            android:textColor="@color/bg_color"
+            android:textSize="18dp">
+    </Button>
+
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
             <Button
                 android:layout_width="wrap_content"
