@@ -78,17 +78,22 @@ public class LessonsActivity extends AppCompatActivity {
                 }
             });
 
-            if (false) {
+            if (NetworkHelper.isNetworkAvailable(this)) {
                 this.lessons = getLessons();
             } else {
-                System.out.println("no connection ok");
                 this.lessons = getLessonsFromSharedPrefrences();
                 LessonAdapter lesson_adapter = new LessonAdapter(lessons,LessonsActivity.this);
                 listLessons.setAdapter(lesson_adapter);
+                listLessons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(LessonsActivity.this, "No internet connection detected. This lesson will be available when you have internet.", Toast.LENGTH_LONG).show();
+                    }
+                });
+                return;
             }
 
             // make the code pause a bit cuz the request is async if need be
-            //replace this with a callback ?
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -106,6 +111,7 @@ public class LessonsActivity extends AppCompatActivity {
                     LessonAdapter lesson_adapter = new LessonAdapter(lessons,LessonsActivity.this);
                     listLessons.setAdapter(lesson_adapter);
 
+
                     //MAKE LESSONS CLICKABLE
                     listLessons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -113,53 +119,51 @@ public class LessonsActivity extends AppCompatActivity {
 
                             Lesson lesson = (Lesson) parent.getItemAtPosition(position) ;
                             //CHECK IF USER ALREADY WATCHED HIS THING.
-                            hasAlreadyWatchLesson(clientId, lesson, new AlreadyWatchedCallback() {
-                                @Override
-                                public void onSuccess(boolean alreadyWatched, Lesson lesson) {
-                                    if (alreadyWatched || clientSubscriptionName.equals("Master"))
-                                    {
-                                        Toast.makeText(LessonsActivity.this, "You have unlimited access to this lesson today.", Toast.LENGTH_LONG).show();
-                                        Intent nextPage = new Intent(LessonsActivity.this, LessonActivity.class);
-                                        nextPage.putExtra("name",lesson.getName());
-                                        nextPage.putExtra("description", lesson.getDescription());
-                                        nextPage.putExtra("content", lesson.getContent());
-                                        nextPage.putExtra("author", lesson.getAuthor());
-                                        nextPage.putExtra("difficulty", lesson.getDifficulty());
-                                        nextPage.putExtra("picture", lesson.getImage());
-                                        nextPage.putExtra("id_group", lesson.getGroup());
-                                        //client extras might not need this:
-                                        nextPage.putExtra("fullname", clientFullname);
-                                        nextPage.putExtra("user_id", clientId);
-                                        nextPage.putExtra("email", clientEmail);
-                                        nextPage.putExtra("subscription_name", clientSubscriptionName);
-                                        nextPage.putExtra("subscription_id", clientSubscriptionId);
-                                        nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
 
-                                        startActivity(nextPage);
-                                    }
-                                    else
-                                    {
-                                        if (clientSubscriptionMaxLessons > counter) {
-                                            //USER CAN WATCH LESSON
-                                            displayPopUp(clientId, clientSubscriptionId, clientFullname, clientEmail, clientSubscriptionName, clientSubscriptionMaxLessons, counter ,lesson);
+                                hasAlreadyWatchLesson(clientId, lesson, new AlreadyWatchedCallback() {
+                                    @Override
+                                    public void onSuccess(boolean alreadyWatched, Lesson lesson) {
+                                        if (alreadyWatched || clientSubscriptionName.equals("Master")) {
+                                            Toast.makeText(LessonsActivity.this, "You have unlimited access to this lesson today.", Toast.LENGTH_LONG).show();
+                                            Intent nextPage = new Intent(LessonsActivity.this, LessonActivity.class);
+                                            nextPage.putExtra("name", lesson.getName());
+                                            nextPage.putExtra("description", lesson.getDescription());
+                                            nextPage.putExtra("content", lesson.getContent());
+                                            nextPage.putExtra("author", lesson.getAuthor());
+                                            nextPage.putExtra("difficulty", lesson.getDifficulty());
+                                            nextPage.putExtra("picture", lesson.getImage());
+                                            nextPage.putExtra("id_group", lesson.getGroup());
+                                            //client extras might not need this:
+                                            nextPage.putExtra("fullname", clientFullname);
+                                            nextPage.putExtra("user_id", clientId);
+                                            nextPage.putExtra("email", clientEmail);
+                                            nextPage.putExtra("subscription_name", clientSubscriptionName);
+                                            nextPage.putExtra("subscription_id", clientSubscriptionId);
+                                            nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
+
+                                            startActivity(nextPage);
                                         } else {
-                                            //USER CANNOT WATCH LESSON
-                                            Toast.makeText(LessonsActivity.this, "You have reached your daily limit of lessons ("+clientSubscriptionMaxLessons+"). Update your subscription or wait a bit", Toast.LENGTH_LONG).show();
+                                            if (clientSubscriptionMaxLessons > counter) {
+                                                //USER CAN WATCH LESSON
+                                                displayPopUp(clientId, clientSubscriptionId, clientFullname, clientEmail, clientSubscriptionName, clientSubscriptionMaxLessons, counter, lesson);
+                                            } else {
+                                                //USER CANNOT WATCH LESSON
+                                                Toast.makeText(LessonsActivity.this, "You have reached your daily limit of lessons (" + clientSubscriptionMaxLessons + "). Update your subscription or wait a bit", Toast.LENGTH_LONG).show();
+                                            }
                                         }
                                     }
-                                }
 
-                                @Override
-                                public void onError(String errorMessage) {
-                                    System.out.println("dommage");
-                                }
-                            });
-                        }
+                                    @Override
+                                    public void onError(String errorMessage) {
+
+                                    }
+                                });
+                            }
                     });
                 }
                 @Override
                 public void onError(String error) {
-                    System.out.println("dommage");;
+
                 }
             };
             //GET CLIENT WATCHED LESSONS
@@ -270,8 +274,7 @@ public class LessonsActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null){
                             String errorMessage = new String(error.networkResponse.data);
-                            Toast.makeText(LessonsActivity.this, url +"NOT ok" + errorMessage, Toast.LENGTH_SHORT).show();
-                        }
+                       }
                     }
                 }
         ){
@@ -342,7 +345,6 @@ public class LessonsActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
-                            Toast.makeText(LessonsActivity.this, message, Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             Toast.makeText(LessonsActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
                         }

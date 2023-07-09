@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,9 @@ public class AccountActivity extends AppCompatActivity {
     Button btn_lessons;
     Button btn_fidelity;
     Button log_out;
+    Button retry;
     CheckBox auto_reconnect_checkbox;
+    LinearLayout layout;
 
     private boolean auto_reconnect;
 
@@ -43,11 +46,38 @@ public class AccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+        layout = findViewById(R.id.account_info);
+
+
+        btn_lessons = findViewById(R.id.lessons_button);
+        log_out = findViewById(R.id.logout_button);
+        btn_fidelity = findViewById(R.id.fidelity_button);
+        auto_reconnect_checkbox = findViewById(R.id.auto_reconnect);
+
+        if (!NetworkHelper.isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection.", Toast.LENGTH_SHORT).show();
+            btn_lessons.setVisibility(View.GONE);
+            auto_reconnect_checkbox.setVisibility(View.GONE);
+            btn_fidelity.setVisibility(View.GONE);
+            log_out.setVisibility(View.GONE);
+
+            //make a new button
+            retry = new Button(AccountActivity.this);
+            retry.setBackgroundColor(getColor(R.color.brand_primary_color));
+            retry.setText("Retry");
+            retry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    recreate();
+                }
+            });
+            layout.addView(retry);
+            return;
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int user_id = extras.getInt("user_id");
-//            String clientFullname = extras.getString("fullname");
             String clientEmail = extras.getString("email");
             String clientSubscriptionName = extras.getString("subscription_name");
             int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
@@ -70,7 +100,6 @@ public class AccountActivity extends AppCompatActivity {
                             email_text = findViewById(R.id.client_email);
                             email_text.setText("Email : " + client.getEmail());
 
-                            auto_reconnect_checkbox = findViewById(R.id.auto_reconnect);
                             auto_reconnect_checkbox.setChecked(auto_reconnect);
 
                             client_subscription_name = findViewById(R.id.client_subscription_name);
@@ -79,10 +108,6 @@ public class AccountActivity extends AppCompatActivity {
                             client_subscription_maxlessonaccess = findViewById(R.id.client_subscription_maxlessonaccess);
                             client_subscription_maxlessonaccess.setText("Max Lesson Access : " + Integer.toString(client.getSubscription().getMaxlessonaccess()));
 
-
-                            btn_lessons = findViewById(R.id.lessons_button);
-                            log_out = findViewById(R.id.logout_button);
-                            btn_fidelity = findViewById(R.id.fidelity_button);
 
                             auto_reconnect_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                 @Override
@@ -145,7 +170,7 @@ public class AccountActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(String errorMessage) {
-                            Toast.makeText(AccountActivity.this, errorMessage + "maybe you ?", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AccountActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                             Intent nextPage = new Intent(AccountActivity.this, LoginActivity.class);
                             startActivity(nextPage);
                         }
@@ -193,7 +218,6 @@ public class AccountActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent nextPage = new Intent(AccountActivity.this, LessonsActivity.class);
                         nextPage.putExtra("user_id", user_id);
-//                        nextPage.putExtra("fullname", clientFullname);
                         nextPage.putExtra("email", clientEmail);
                         nextPage.putExtra("subscription_name", clientSubscriptionName);
                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
@@ -277,7 +301,7 @@ public class AccountActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(AccountActivity.this,"ERROR: %s".format(error.toString()) , Toast.LENGTH_SHORT).show();
+                        callback.onError("%s".format(error.toString()));
                     }
                 }
         ){

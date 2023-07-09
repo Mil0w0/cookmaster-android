@@ -49,6 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (!NetworkHelper.isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection detected.", Toast.LENGTH_LONG).show();
+            Intent nextPage = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(nextPage);
+        }
+
 
         signUp = findViewById(R.id.create_account);
         forgotPassword = findViewById(R.id.forgot_password);
@@ -178,29 +184,29 @@ public class LoginActivity extends AppCompatActivity {
                                                 nextPage.putExtra("email", client.getEmail());
                                                 nextPage.putExtra("subscription_name", client.getSubscription().getName());
                                                 nextPage.putExtra("subscription_id", client.getSubscription().getId());
+                                                nextPage.putExtra("auto_reconnect", auto_reconnect);
                                                 nextPage.putExtra("subscription_maxlessonaccess", client.getSubscription().getMaxlessonaccess());
                                                 startActivity(nextPage);
                                             }
                                             @Override
                                             public void onError(String error) {
-                                                System.out.println("dommage");;
+
                                             }
                                         };
                                         getSubscriptionInfo(rq, subscription, callback);
+                                    } else{
+                                        Toast.makeText(LoginActivity.this, "%s".format("You are not a client"), Toast.LENGTH_SHORT).show();
                                     }
                                 }catch (JSONException je) {
                                     Toast.makeText(LoginActivity.this, "ERROR json: %s".format(je.getMessage()), Toast.LENGTH_SHORT).show();
                                 }
+
                             } else {
-                                if (response.has("error")){
-                                    try {
-                                        String error = response.getString("message");
-                                        int error_code = response.getInt("error");
-                                        Toast.makeText(LoginActivity.this, Integer.toString(error_code) +": "+ error, Toast.LENGTH_SHORT).show();
-                                    } catch (Exception e) {
-                                        Toast.makeText(LoginActivity.this, "ERROR 2: %s".format(e.getMessage()),Toast.LENGTH_SHORT).show();
-                                    }
-                                  }
+                                try {
+                                    Toast.makeText(LoginActivity.this, "The app can only be used by clients. You are a " + response.getString("role"), Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    Toast.makeText(LoginActivity.this, "ERROR 2: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                                }
                             }
                     }
                 }, new Response.ErrorListener() {
@@ -317,5 +323,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         rq.add(query);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!NetworkHelper.isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection detected.", Toast.LENGTH_LONG).show();
+            Intent nextPage = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(nextPage);
+        }
     }
 }
