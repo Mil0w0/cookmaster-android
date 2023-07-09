@@ -69,22 +69,22 @@ public class FidelityOverviewActivity extends AppCompatActivity {
     NfcAdapter nfcAdapter;
     PendingIntent pendingIntent;
     Button btn_secret, settingsButton;
+    int nfc_identity = 0;
+    int user_id,subscriptionId;
+    boolean auto_reconnect;
 
+    Client client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fidelity_overview);
 
-        int user_id = getIntent().getIntExtra("user_id", -1);
-        int subscriptionId = getIntent().getIntExtra("subscription_id", -1);
-        boolean auto_reconnect = getIntent().getBooleanExtra("auto_reconnect", false);
+        user_id = getIntent().getIntExtra("user_id", -1);
+        subscriptionId = getIntent().getIntExtra("subscription_id", -1);
+        auto_reconnect = getIntent().getBooleanExtra("auto_reconnect", false);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(FidelityOverviewActivity.this);
 
-        //DEBUGGING: CHECK IF NFC IS AVAILABLE
-//        if(nfcAdapter != null && nfcAdapter.isEnabled()){
-//            Toast.makeText(this, "NFC available!", Toast.LENGTH_LONG).show();
-//        }
         //Create a PendingIntent object so the Android system can
         //populate it with the details of the tag when it is scanned.
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_MUTABLE);
@@ -155,26 +155,11 @@ public class FidelityOverviewActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int id, String firstname,String lastname, String email, int fidelity_points) {
 
-                Client client = new Client(id, email, firstname, lastname, fidelity_points);
+                client = new Client(id, email, firstname, lastname, fidelity_points);
 
                 matrix.setSaturation(1);
                 ColorMatrixColorFilter filter_color = new ColorMatrixColorFilter(matrix);
 
-                btn_secret.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasAlreadyPlayed(user_id) == false) {
-                            Intent intent = new Intent(FidelityOverviewActivity.this, FidelityGameActivity.class);
-                            intent.putExtra("user_id", user_id);
-                            intent.putExtra("fidelitypoints", client.getFidelity_points());
-                            intent.putExtra("subscription_id", subscriptionId);
-                            intent.putExtra("auto_reconnect", auto_reconnect);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(FidelityOverviewActivity.this, "You have already played today!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
                 btn_rewards.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -213,7 +198,13 @@ public class FidelityOverviewActivity extends AppCompatActivity {
         });
     }
 
-    private boolean hasAlreadyPlayed(int user_id) {
+    private boolean hasAlreadyPlayed(int user_id, int nfc_identity) {
+
+        if (nfc_identity != 102){
+            //IF THE NFC TAG ISN'T OUR, ALLOW TO PLAY THE GAME ANYTIME.
+            return false;
+        }
+
         SharedPreferences sharedPreferences = getSharedPreferences("fidelity-game", MODE_PRIVATE);
         if (sharedPreferences.contains(Integer.toString(user_id))){
             String lastTime = sharedPreferences.getString(Integer.toString(user_id), "undefined");
@@ -223,8 +214,6 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                 Date date = new Date();
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                 String today = formatter.format(date);
-                System.out.println(lastTime);
-                System.out.println(today);
                 if (lastTime.equals(today)) {
                     return true;
                 } else {
@@ -254,11 +243,9 @@ public class FidelityOverviewActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        //setIntent(intent);
-        int nfc_identity = 0;
 
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction()) || NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction()) || NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+
             Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             NdefMessage[] msgs;
             String debug = "";
@@ -270,11 +257,9 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                     for (NdefRecord record : records) {
                         byte[] payload = record.getPayload();
                         String textEncoding = ((payload[0] & 0x80) == 0) ? "UTF-8" : "UTF-16";
-                        int languageCodeLength = payload[0] & 0x1F;
                         String text = "";
                         try {
                             text = new String(payload, 0, payload.length, textEncoding);
-                            System.out.println(text);
                             nfc_identity = Integer.parseInt(text);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
@@ -284,7 +269,7 @@ public class FidelityOverviewActivity extends AppCompatActivity {
             }
             Toast.makeText(this, Integer.toString(nfc_identity), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "NFC intent received but not tag discovered!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "NFC intent received but no tag discovered!", Toast.LENGTH_LONG).show();
         }
 
         EmitterConfig emitterConfig = new Emitter(5L, TimeUnit.SECONDS).perSecond(50);
@@ -298,6 +283,22 @@ public class FidelityOverviewActivity extends AppCompatActivity {
         konfettiView.start(party);
 
         btn_secret.setVisibility(View.VISIBLE);
+        btn_secret.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (hasAlreadyPlayed(user_id, nfc_identity) == false) {
+                    Intent intent = new Intent(FidelityOverviewActivity.this, FidelityGameActivity.class);
+                    intent.putExtra("user_id", user_id);
+                    intent.putExtra("fidelitypoints", client.getFidelity_points());
+                    intent.putExtra("subscription_id", subscriptionId);
+                    intent.putExtra("auto_reconnect", auto_reconnect);
+                    intent.putExtra("nfc_identity", nfc_identity);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(FidelityOverviewActivity.this, "You have already played today!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         btn_secret.setClickable(true);
 
     }

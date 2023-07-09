@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -43,6 +44,8 @@ public class FidelityGameActivity extends AppCompatActivity {
     private int tryCount = 0;
     private final int FIDELITY_POINTS_EARNED = 7;
 
+    private String question_answer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,7 @@ public class FidelityGameActivity extends AppCompatActivity {
         int subscriptionId = getIntent().getIntExtra("subscription_id", -1);
         int fidelityPoints = getIntent().getIntExtra("fidelitypoints", 0);
         boolean auto_reconnect = getIntent().getBooleanExtra("auto_reconnect", false);
+        int nfc_identity = getIntent().getIntExtra("nfc_identity", -1);
 
         if (fidelityPoints == 0 || user_id == -1 || subscriptionId == -1) {
             Toast.makeText(FidelityGameActivity.this, "Error, please log in again", Toast.LENGTH_SHORT).show();
@@ -63,6 +67,20 @@ public class FidelityGameActivity extends AppCompatActivity {
         submitFG = findViewById(R.id.fidelity_game_button);
         konfettiView = findViewById(R.id.konfettiView);
         LinearLayout layout = findViewById(R.id.fidelity_game_layout);
+        TextView question = findViewById(R.id.question_game);
+
+        if (nfc_identity != 102){
+            //SPECIAL QUESTION FOR THE GOLDEN NFC OR ANY OTHER PERSON WITH A NFC TAG
+            question.setText("What is the best ESGI-student-created game made last year for the first year annual Project ?");
+            answerFG.setHint("It might have involved Champagne...");
+            question_answer = "The Legend of Sananes";
+        } else {
+            //NORMAL QUESTION
+            question.setText(getResources().getString(R.string.fidelity_game_question));
+            answerFG.setHint(getResources().getString(R.string.fidelity_game_hint));
+            question_answer = "Apple - Royal Gala";
+        }
+
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +99,7 @@ public class FidelityGameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String answer = answerFG.getText().toString();
 
-                if (answer.equals("Apple - Royal Gala")) {
+                if (answer.equals(question_answer)) {
 
                     try {
                         SharedPreferences sharedPreferences = getSharedPreferences("fidelity-game", MODE_PRIVATE);

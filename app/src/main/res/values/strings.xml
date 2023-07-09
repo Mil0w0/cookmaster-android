@@ -20,7 +20,7 @@
     <string name="fidelity_stages">Unlock rewards by stages </string>
     <string name="fidelity_game_title"> Let\'s get cooking ! </string>
     <string name="fidelity_game_description"> Get more fidelity points once a day by answering the following question right ! </string>
-    <string name="fidelity_game_question"> What is the name of the first ever lesson of Cookmaster? </string>
+    <string name="fidelity_game_question"> What is the name of the current first lesson of Cookmaster? </string>
     <string name="fidelity_game_hint">Eg: champagne for everyone</string>
     <string name="rewards_stages_title">All rewards by stages</string>
     <string name="rewards_stage110">Stage 110</string>
@@ -28,7 +28,7 @@
     <string name="rewards_stage180">Stage 180</string>
     <string name="get_item">Get this reward</string>
     <string name="popUpTitle">About fidelity at Cookmaster</string>
-    <string name="popUpMessage">Everytime you make an order on the cookmaster shop, you get some fidelity points (FP). There are 3 stages of rewards you can have depending of your FP : 50, 110 and 180.\nOnce you have enough point, you can reserve the items you would like and go fetch them in one of our premises. Scan your credit card (NFC) to play a small game and try to win bonus FP.</string>
+    <string name="popUpMessage">Everytime you make an order on the cookmaster shop, you get some fidelity points (FP). There are 3 stages of rewards you can have depending of your FP : 50, 110 and 180.\nOnce you have enough point, you can reserve the items you would like and go fetch them in one of our premises. Scan your credit card (NFC) once a day to play a small game and try to win bonus FP.</string>
     <string name="cookmastershop">What shop ?</string>
 
 </resources>

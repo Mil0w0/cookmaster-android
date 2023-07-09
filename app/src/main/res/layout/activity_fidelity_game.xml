@@ -76,9 +76,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
+            android:id="@+id/question_game"
             android:textSize="16dp"
             android:layout_marginTop="60dp"
-            android:text="@string/fidelity_game_question"
             android:gravity="center">
         </TextView>
 
@@ -86,7 +86,6 @@
             android:id="@+id/fidelity_game_answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/fidelity_game_hint"
             android:inputType="text"
             android:gravity="center">
         </EditText>
