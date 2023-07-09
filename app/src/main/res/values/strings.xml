@@ -26,5 +26,6 @@
     <string name="rewards_stage110">Stage 110</string>
     <string name="rewards_stage50">Stage 50</string>
     <string name="rewards_stage180">Stage 180</string>
+    <string name="get_item">Get this reward</string>
 
 </resources>

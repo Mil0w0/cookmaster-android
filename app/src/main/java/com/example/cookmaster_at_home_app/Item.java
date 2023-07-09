@@ -33,4 +33,12 @@ public class Item {
     public int getStock() {
         return stock;
     }
+
+    public int getReward() {
+        return reward;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

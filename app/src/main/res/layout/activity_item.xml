@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RewardsActivity"
+    tools:context=".ItemActivity"
     android:background="@color/bg_color">
     >
 
@@ -47,60 +47,59 @@
         android:orientation="vertical"
         android:layout_margin="32dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:id="@+id/item_image"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:id="@+id/item_title"
+                android:textColor="@color/brand_primary_color"
+                android:textSize="24dp">
+            </TextView>
+
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/rewards_stages_title"
-            android:gravity="center"
-            android:textColor="@color/brand_primary_color"
-            android:textSize="24dp">
+            android:id="@+id/item_description"
+            android:textColor="@color/text_color"
+            android:layout_marginBottom="40dp"
+            android:textSize="18dp">
         </TextView>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/rewards_stage50"
-            android:layout_marginTop="30dp"
-            android:textColor="@color/brand_primary_color"
-            android:textSize="20dp">
+            android:id="@+id/item_reward"
+            android:textColor="@color/text_color"
+            android:textSize="18dp">
         </TextView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:id="@+id/rewards50_recycler_view">
-        </androidx.recyclerview.widget.RecyclerView>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rewards_stage110"
-            android:layout_marginTop="30dp"
+            android:id="@+id/item_button"
+            android:layout_marginTop="40dp"
             android:textColor="@color/brand_primary_color"
-            android:textSize="20dp">
-        </TextView>
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/brand_second_color"
+            android:text="@string/get_item" >
+        </Button>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:id="@+id/rewards110_recycler_view">
-        </androidx.recyclerview.widget.RecyclerView>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rewards_stage180"
-            android:layout_marginTop="30dp"
-            android:textColor="@color/brand_primary_color"
-            android:textSize="20dp">
-        </TextView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:id="@+id/rewards180_recycler_view">
-        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 </LinearLayout>
