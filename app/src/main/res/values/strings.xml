@@ -27,5 +27,8 @@
     <string name="rewards_stage50">Stage 50</string>
     <string name="rewards_stage180">Stage 180</string>
     <string name="get_item">Get this reward</string>
+    <string name="popUpTitle">About fidelity at Cookmaster</string>
+    <string name="popUpMessage">Everytime you make an order on the cookmaster shop, you get some fidelity points (FP). There are 3 stages of rewards you can have depending of your FP : 50, 110 and 180.\nOnce you have enough point, you can reserve the items you would like and go fetch them in one of our premises. Scan your credit card (NFC) to play a small game and try to win bonus FP.</string>
+    <string name="cookmastershop">What shop ?</string>
 
 </resources>

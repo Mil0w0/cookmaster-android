@@ -2,13 +2,16 @@ package com.example.cookmaster_at_home_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.net.Uri;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -105,6 +108,33 @@ public class FidelityOverviewActivity extends AppCompatActivity {
         stage110.setColorFilter(filter);
         stage180.setColorFilter(filter);
 
+        about_fidelity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(FidelityOverviewActivity.this)
+                        .setTitle(getResources().getString(R.string.popUpTitle))
+                        .setMessage(getResources().getString(R.string.popUpMessage))
+                        .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(getResources().getString(R.string.cookmastershop), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                                String url = "https://becomeacookmaster.live";
+                                browserIntent.setData(Uri.parse(url));
+                                startActivity(browserIntent);
+                            }
+                        })
+                        .show();
+
+            }
+        });
+
+
 
         settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +152,6 @@ public class FidelityOverviewActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int id, String firstname,String lastname, String email, int fidelity_points) {
 
-                Toast.makeText(FidelityOverviewActivity.this, Integer.toString(fidelity_points), Toast.LENGTH_SHORT).show();
                 Client client = new Client(id, email, firstname, lastname, fidelity_points);
 
                 matrix.setSaturation(1);
