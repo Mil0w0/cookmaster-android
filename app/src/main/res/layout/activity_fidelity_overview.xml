@@ -60,11 +60,10 @@
             android:textColor="@color/brand_primary_color"
             android:textSize="24dp">
         </TextView>
-        <!--        android:text="@string/fidelity_points"-->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You have 15 pts"
             android:id="@+id/user_fidelity_points"
             android:layout_marginTop="30dp"
             android:textColor="@color/text_color"
@@ -101,21 +100,21 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/stage_50"
-                android:src="@drawable/number_50_icon"
+                android:src="@drawable/stage_50_icon"
                 android:layout_weight="1">
             </ImageView>
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/stage_110"
-                android:src="@drawable/number_50_icon"
+                android:src="@drawable/stage_110_icon"
                 android:layout_weight="1">
             </ImageView>
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/stage_180"
-                android:src="@drawable/number_50_icon"
+                android:src="@drawable/stage_180_icon"
                 android:layout_weight="1">
             </ImageView>
         </LinearLayout>

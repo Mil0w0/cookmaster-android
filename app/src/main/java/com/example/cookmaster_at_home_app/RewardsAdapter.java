@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHolder> {
@@ -22,7 +24,7 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHo
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -30,7 +32,9 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Item item = itemList.get(position);
         holder.itemName.setText(item.getName());
-        //holder.itemImage.setImageResource(item.getImage()); use the library todo that
+        String url_image = "https://becomeacookmaster.live/assets/images/shop-items/default.png";
+        Picasso.get().load(url_image).into(holder.itemImage);
+
     }
 
     @Override

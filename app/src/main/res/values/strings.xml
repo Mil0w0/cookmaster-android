@@ -22,5 +22,9 @@
     <string name="fidelity_game_description"> Get more fidelity points once a day by answering the following question right ! </string>
     <string name="fidelity_game_question"> What is the name of the first ever lesson of Cookmaster? </string>
     <string name="fidelity_game_hint">Eg: champagne for everyone</string>
+    <string name="rewards_stages_title">All rewards by stages</string>
+    <string name="rewards_stage110">Stage 110</string>
+    <string name="rewards_stage50">Stage 50</string>
+    <string name="rewards_stage180">Stage 180</string>
 
 </resources>

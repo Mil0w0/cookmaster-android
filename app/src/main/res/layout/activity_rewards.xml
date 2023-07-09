@@ -57,10 +57,50 @@
             android:textSize="24dp">
         </TextView>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rewards_stage50"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/brand_primary_color"
+            android:textSize="20dp">
+        </TextView>
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:id="@+id/rewards50_recycler_view">
+        </androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rewards_stage110"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/brand_primary_color"
+            android:textSize="20dp">
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:id="@+id/rewards110_recycler_view">
+        </androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rewards_stage180"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/brand_primary_color"
+            android:textSize="20dp">
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:id="@+id/rewards180_recycler_view">
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 </LinearLayout>
