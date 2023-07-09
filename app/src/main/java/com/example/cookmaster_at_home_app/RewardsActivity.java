@@ -5,8 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -29,10 +32,31 @@ public class RewardsActivity extends AppCompatActivity {
     private List<Item> items50;
     private List<Item> items110;
     private List<Item> items180;
+
+    private Button settingsButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rewards);
+
+        Bundle bundle = getIntent().getExtras();
+        int user_id = bundle.getInt("user_id", -1);
+        int subscriptionId = bundle.getInt("subscription_id", -1);
+        boolean auto_reconnect = bundle.getBoolean("auto_reconnect", false);
+
+        settingsButton = findViewById(R.id.settings_button);
+        settingsButton = findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextPage = new Intent(RewardsActivity.this, AccountActivity.class);
+                nextPage.putExtra("user_id", user_id);
+                nextPage.putExtra("subscription_id", subscriptionId);
+                nextPage.putExtra("auto_reconnect", auto_reconnect);
+                startActivity(nextPage);
+            }
+        });
 
         getItems(new FidelityItemsCallback() {
             @Override
@@ -54,13 +78,13 @@ public class RewardsActivity extends AppCompatActivity {
                         switch (reward) {
                             //Replace with the correct values after testing
                             case 1:
-                                listItems50.add(new Item(id, name, description, image, price, reward, stock));
+                                listItems50.add(new Item(id, name, image,description, price, reward, stock));
                                 break;
                             case 2:
-                                listItems110.add(new Item(id, name, description, image, price, reward, stock));
+                                listItems110.add(new Item(id, name, image,description, price, reward, stock));
                                 break;
                             case 3:
-                                listItems180.add(new Item(id, name, description, image, price, reward, stock));
+                                listItems180.add(new Item(id, name, image,description, price, reward, stock));
                                 break;
                         }
 

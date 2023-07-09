@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,10 +54,22 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHo
                 if (item.getStock() == 49){
                     Toast.makeText(context, "This item is out of stock!", Toast.LENGTH_SHORT).show();
                     return;
+                } else {
+                    Bundle bundle = ((RewardsActivity) context).getIntent().getExtras();
+                    int user_id = bundle.getInt("user_id", -1);
+                    int subscriptionId = bundle.getInt("subscription_id", -1);
+                    int auto_reconnect = bundle.getInt("auto_reconnect", -1);
+                    int fidelitypoints = bundle.getInt("fidelitypoints", -1);
+
+                    Intent intent = new Intent(context, ItemActivity.class);
+                    intent.putExtra("item_id", item.getId());
+                    intent.putExtra("user_id", user_id);
+                    intent.putExtra("subscription_id", subscriptionId);
+                    intent.putExtra("auto_reconnect", auto_reconnect);
+                    intent.putExtra("fidelitypoints", fidelitypoints);
+
+                    context.startActivity(intent);
                 }
-                Intent intent = new Intent(context, ItemActivity.class);
-                intent.putExtra("item_id", item.getId());
-                context.startActivity(intent);
             }
         });
     }

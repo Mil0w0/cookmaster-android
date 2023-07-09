@@ -75,8 +75,8 @@
             android:layout_width="match_parent"
             android:text="@string/fidelity_stages"
             android:layout_marginTop="60dp"
-            android:textSize="18dp"
-            android:textColor="@color/text_color"
+            android:textSize="20dp"
+            android:textColor="@color/brand_primary_color"
             android:layout_height="wrap_content">
         </TextView>
         <TextView
