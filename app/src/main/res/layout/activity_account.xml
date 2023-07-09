@@ -30,7 +30,7 @@
         android:layout_marginTop="24dp"
         android:textColor="@color/brand_primary_color"
         android:textSize="24dp"
-        android:text="My account informations">
+        android:text="My account information">
     </TextView>
 
     <LinearLayout
@@ -82,6 +82,7 @@
             android:id="@+id/lessons_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/bg_color"
             android:backgroundTint="@color/brand_primary_color"
             android:layout_marginTop="16dp"
             android:text="See all lessons">
@@ -91,6 +92,7 @@
             android:id="@+id/fidelity_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/bg_color"
             android:backgroundTint="@color/brand_primary_color"
             android:layout_marginTop="16dp"
             android:text="My fidelity points">
@@ -99,6 +101,7 @@
             android:id="@+id/logout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/bg_color"
             android:backgroundTint="@color/brand_error_color"
             android:layout_marginTop="16dp"
             android:text="Log out">

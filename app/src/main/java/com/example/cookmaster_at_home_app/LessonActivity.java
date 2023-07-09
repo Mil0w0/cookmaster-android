@@ -139,13 +139,13 @@ public class LessonActivity extends AppCompatActivity {
                                             nextPage.putExtra("difficulty", lesson.getDifficulty());
                                             nextPage.putExtra("picture", lesson.getImage());
                                             nextPage.putExtra("id_group", lesson.getGroup());
-                                            //client extras might not need this:
+
                                             nextPage.putExtra("fullname", clientFullname);
                                             nextPage.putExtra("user_id", clientId);
                                             nextPage.putExtra("email", clientEmail);
                                             nextPage.putExtra("subscription_name", clientSubscriptionName);
                                             nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
-                                            //group/image/ytb to add?
+
                                             startActivity(nextPage);
                                         } else {
                                             if (clientSubscriptionMaxLessons > counter) {
@@ -154,14 +154,12 @@ public class LessonActivity extends AppCompatActivity {
                                             } else {
                                                 //USER CANNOT WATCH LESSON
                                                 Toast.makeText(LessonActivity.this, "You have reached your daily limit of lessons (" + clientSubscriptionMaxLessons + "). Update your subscription or wait a bit", Toast.LENGTH_LONG).show();
-                                                //TODO : REDIRECT TO LESSONS HE CAN WATCH TODAY ?
                                             }
                                         }
                                     }
 
                                     @Override
                                     public void onError(String errorMessage) {
-                                        System.out.println("dommage");
                                     }
                                 });
                             }

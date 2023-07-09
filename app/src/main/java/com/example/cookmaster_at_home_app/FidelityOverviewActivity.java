@@ -18,6 +18,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -40,8 +41,11 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +121,7 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                         .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                finish();
+                                dialog.dismiss();;
                             }
                         })
                         .setNegativeButton(getResources().getString(R.string.cookmastershop), new DialogInterface.OnClickListener() {
@@ -130,7 +134,6 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                             }
                         })
                         .show();
-
             }
         });
 
@@ -220,7 +223,8 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                 Date date = new Date();
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                 String today = formatter.format(date);
-                System.out.println(lastTime + " " + today);
+                System.out.println(lastTime);
+                System.out.println(today);
                 if (lastTime.equals(today)) {
                     return true;
                 } else {
@@ -250,7 +254,38 @@ public class FidelityOverviewActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        setIntent(intent);
+        //setIntent(intent);
+        int nfc_identity = 0;
+
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            NdefMessage[] msgs;
+            String debug = "";
+            if (rawMsgs != null) {
+                msgs = new NdefMessage[rawMsgs.length];
+                for (int i = 0; i < rawMsgs.length; i++) {
+                    msgs[i] = (NdefMessage) rawMsgs[i];
+                    NdefRecord[] records = msgs[i].getRecords();
+                    for (NdefRecord record : records) {
+                        byte[] payload = record.getPayload();
+                        String textEncoding = ((payload[0] & 0x80) == 0) ? "UTF-8" : "UTF-16";
+                        int languageCodeLength = payload[0] & 0x1F;
+                        String text = "";
+                        try {
+                            text = new String(payload, 0, payload.length, textEncoding);
+                            System.out.println(text);
+                            nfc_identity = Integer.parseInt(text);
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            Toast.makeText(this, Integer.toString(nfc_identity), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "NFC intent received but not tag discovered!", Toast.LENGTH_LONG).show();
+        }
 
         EmitterConfig emitterConfig = new Emitter(5L, TimeUnit.SECONDS).perSecond(50);
         Party party = new PartyFactory(emitterConfig)
@@ -265,22 +300,6 @@ public class FidelityOverviewActivity extends AppCompatActivity {
         btn_secret.setVisibility(View.VISIBLE);
         btn_secret.setClickable(true);
 
-//        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-//            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-//            NdefMessage[] msgs;
-//            String debug = "";
-//            if (rawMsgs != null) {
-//                msgs = new NdefMessage[rawMsgs.length];
-//                for (int i = 0; i < rawMsgs.length; i++) {
-//                    msgs[i] = (NdefMessage) rawMsgs[i];
-//                    debug += msgs[i].toString();
-//                }
-//                Toast.makeText(this, debug, Toast.LENGTH_LONG).show();
-//            }
-//        } else {
-//            Toast.makeText(this, "NFC intent received but not tag discovered!", Toast.LENGTH_LONG).show();
-//        }
     }
 
     private void getFidelityPoints(int user_id, FidelityCallback callback) {
