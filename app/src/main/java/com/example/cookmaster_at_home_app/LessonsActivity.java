@@ -134,7 +134,7 @@ public class LessonsActivity extends AppCompatActivity {
                                         nextPage.putExtra("subscription_name", clientSubscriptionName);
                                         nextPage.putExtra("subscription_id", clientSubscriptionId);
                                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
-                                        //group/image/ytb to add?
+
                                         startActivity(nextPage);
                                     }
                                     else
@@ -145,7 +145,6 @@ public class LessonsActivity extends AppCompatActivity {
                                         } else {
                                             //USER CANNOT WATCH LESSON
                                             Toast.makeText(LessonsActivity.this, "You have reached your daily limit of lessons ("+clientSubscriptionMaxLessons+"). Update your subscription or wait a bit", Toast.LENGTH_LONG).show();
-                                            //TODO : REDIRECT TO LESSONS HE CAN WATCH TODAY ?
                                         }
                                     }
                                 }

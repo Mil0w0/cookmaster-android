@@ -38,4 +38,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.android.volley:volley:1.2.1'
     implementation group: 'at.favre.lib', name: 'bcrypt', version: '0.10.2'
+    implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
 }
