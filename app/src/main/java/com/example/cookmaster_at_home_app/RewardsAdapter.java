@@ -1,11 +1,16 @@
 package com.example.cookmaster_at_home_app;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +22,10 @@ import java.util.List;
 public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHolder> {
 
     private List<Item> itemList;
-    public RewardsAdapter(List<Item> itemList) {
+    private Context context;
+    public RewardsAdapter(List<Item> itemList, Context context) {
         this.itemList = itemList;
+        this.context = context;
     }
 
     @NonNull
@@ -32,9 +39,26 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Item item = itemList.get(position);
         holder.itemName.setText(item.getName());
-        String url_image = "https://becomeacookmaster.live/assets/images/shop-items/default.png";
+        String url_image = "https://becomeacookmaster.live/assets/images/shop-items/" + item.getImage();
         Picasso.get().load(url_image).into(holder.itemImage);
-
+        if (item.getStock() == 49){
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            ColorMatrixColorFilter filter_color = new ColorMatrixColorFilter(matrix);
+            holder.itemImage.setColorFilter(filter_color);
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (item.getStock() == 49){
+                    Toast.makeText(context, "This item is out of stock!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(context, ItemActivity.class);
+                intent.putExtra("item_id", item.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

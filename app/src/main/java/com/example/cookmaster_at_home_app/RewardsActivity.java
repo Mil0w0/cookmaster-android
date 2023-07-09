@@ -97,13 +97,12 @@ public class RewardsActivity extends AppCompatActivity {
     private void setRecyclerView(List<Item> items, RecyclerView recyclerView){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        RewardsAdapter adapter = new RewardsAdapter(items);
+        RewardsAdapter adapter = new RewardsAdapter(items, RewardsActivity.this);
         recyclerView.setAdapter(adapter);
     }
     public void getItems(FidelityItemsCallback callback){
-        List<Item> list = new ArrayList<>();
-        RequestQueue rq = Volley.newRequestQueue(RewardsActivity.this);
 
+        RequestQueue rq = Volley.newRequestQueue(RewardsActivity.this);
 
         String url = "https://api.becomeacookmaster.live:9000/shopitem/all";
 
