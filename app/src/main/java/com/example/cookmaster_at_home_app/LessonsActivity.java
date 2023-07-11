@@ -140,6 +140,7 @@ public class LessonsActivity extends AppCompatActivity {
                                             nextPage.putExtra("subscription_name", clientSubscriptionName);
                                             nextPage.putExtra("subscription_id", clientSubscriptionId);
                                             nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
+                                            nextPage.putExtra("auto_reconnect", auto_reconnect);
 
                                             startActivity(nextPage);
                                         } else {
@@ -174,7 +175,7 @@ public class LessonsActivity extends AppCompatActivity {
     private void hasAlreadyWatchLesson(int clientId, Lesson lesson, AlreadyWatchedCallback callback) {
         RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/watch/" + Integer.toString(clientId) + "/" + Integer.toString(lesson.getId());
+        String url = "https://api.becomeacookmaster.live:9000/lesson/watch/" + clientId + "/" + lesson.getId();
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
@@ -187,7 +188,7 @@ public class LessonsActivity extends AppCompatActivity {
                             boolean alreadyWatched = jsonResponse.getBoolean("iswatched");
                             callback.onSuccess(alreadyWatched, lesson);
                         } catch (Exception e) {
-                            Toast.makeText(LessonsActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonsActivity.this, String.format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -216,7 +217,7 @@ public class LessonsActivity extends AppCompatActivity {
 
     private void countClientWatchedLessons(RequestQueue rq, int clientId, LessonClientCallback callback) {
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + Integer.toString(clientId);
+        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + clientId;
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
@@ -230,7 +231,7 @@ public class LessonsActivity extends AppCompatActivity {
                             int lessonWatched = jsonResponse.getInt("count");
                             callback.onSuccess(lessonWatched, lessons);
                         } catch (Exception e) {
-                            Toast.makeText(LessonsActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonsActivity.this, String.format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -259,7 +260,7 @@ public class LessonsActivity extends AppCompatActivity {
 
     private void updateClientWatchedLessons(RequestQueue rq, int clientId){
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + Integer.toString(clientId);
+        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + clientId;
 
         StringRequest query = new StringRequest(Request.Method.DELETE,
                 url,
@@ -335,7 +336,7 @@ public class LessonsActivity extends AppCompatActivity {
 
         RequestQueue rq = Volley.newRequestQueue(LessonsActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/client/watch/" + Integer.toString(clientId) + "/" + Integer.toString(lessonId);
+        String url = "https://api.becomeacookmaster.live:9000/client/watch/" + clientId + "/" + lessonId;
         StringRequest query = new StringRequest(Request.Method.PATCH,
                 url,
                 new Response.Listener<String>() {
@@ -346,7 +347,7 @@ public class LessonsActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
                         } catch (Exception e) {
-                            Toast.makeText(LessonsActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonsActivity.this, String.format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -440,7 +441,7 @@ public class LessonsActivity extends AppCompatActivity {
                             }
 
                         }catch (Exception e){
-                            Toast.makeText(LessonsActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonsActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
                         }
                     }
                 },

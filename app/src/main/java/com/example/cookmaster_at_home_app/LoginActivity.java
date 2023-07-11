@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //GET VALUES FROM INPUTS
         input_password = findViewById(R.id.password_input) ;
-        input_login = findViewById(R.id.login_input);;
+        input_login = findViewById(R.id.login_input);
         String password = input_password.getText().toString();
         String email = input_login.getText().toString();
         boolean isChecked = auto_reconnect_checkbox.isChecked();
@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             hashed_password = response.getString("password");
 
-                            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), (CharSequence) hashed_password);
+                            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashed_password);
 
                             if (result.verified) {
                                 input_password.setText("");
@@ -124,13 +124,13 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "WRONG PASSWORD", Toast.LENGTH_SHORT).show();
                             }
                        } catch (Exception e) {
-                            Toast.makeText(LoginActivity.this, "ERROR 4: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, String.format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(LoginActivity.this, "ERROR 3: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, String.format(error.toString()), Toast.LENGTH_SHORT).show();
             }
         }){
         @Override
@@ -195,24 +195,24 @@ public class LoginActivity extends AppCompatActivity {
                                         };
                                         getSubscriptionInfo(rq, subscription, callback);
                                     } else{
-                                        Toast.makeText(LoginActivity.this, "%s".format("You are not a client"), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "You are not a client", Toast.LENGTH_SHORT).show();
                                     }
                                 }catch (JSONException je) {
-                                    Toast.makeText(LoginActivity.this, "ERROR json: %s".format(je.getMessage()), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, String.format(je.getMessage()), Toast.LENGTH_SHORT).show();
                                 }
 
                             } else {
                                 try {
                                     Toast.makeText(LoginActivity.this, "The app can only be used by clients. You are a " + response.getString("role"), Toast.LENGTH_SHORT).show();
                                 } catch (JSONException e) {
-                                    Toast.makeText(LoginActivity.this, "ERROR 2: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, String.format(e.toString()), Toast.LENGTH_SHORT).show();
                                 }
                             }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(LoginActivity.this, "ERROR: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, String.format(error.toString()), Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -251,7 +251,7 @@ public class LoginActivity extends AppCompatActivity {
                                callback.onSuccess(subscription);
                             }
                         } catch (Exception e){
-                            Toast.makeText(LoginActivity.this,"ERROR 2: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -259,7 +259,7 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(LoginActivity.this,"ERROR: %s".format(error.toString()) , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, String.format(error.toString()) , Toast.LENGTH_SHORT).show();
                     }
                 }
         ){
@@ -289,7 +289,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (json_response.has("error")){
                                 String error = json_response.getString("message");
                                 int error_code = json_response.getInt("error");
-                                Toast.makeText(LoginActivity.this, Integer.toString(error_code) +": "+ error, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, error_code +": "+ error, Toast.LENGTH_SHORT).show();
                             } else {
                                 String lastname = json_response.getString("lastname");
                                 String firstname = json_response.getString("firstname");
@@ -301,7 +301,7 @@ public class LoginActivity extends AppCompatActivity {
                                 client.setLanguage(language);
                             }
                         }catch (Exception e){
-                            Toast.makeText(LoginActivity.this,"ERROR 2: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -309,7 +309,7 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(LoginActivity.this,"ERROR: %s".format(error.toString()) , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, String.format(error.toString()) , Toast.LENGTH_SHORT).show();
                     }
                 }
         ){

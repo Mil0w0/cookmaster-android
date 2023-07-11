@@ -106,7 +106,7 @@ public class AccountActivity extends AppCompatActivity {
                             client_subscription_name.setText("Subscription : " + client.getSubscription().getName());
 
                             client_subscription_maxlessonaccess = findViewById(R.id.client_subscription_maxlessonaccess);
-                            client_subscription_maxlessonaccess.setText("Max Lesson Access : " + Integer.toString(client.getSubscription().getMaxlessonaccess()));
+                            client_subscription_maxlessonaccess.setText("Max Lesson Access : " + client.getSubscription().getMaxlessonaccess());
 
 
                             auto_reconnect_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -191,7 +191,7 @@ public class AccountActivity extends AppCompatActivity {
                 client_subscription_name.setText("Subscription : " + clientSubscriptionName);
 
                 client_subscription_maxlessonaccess = findViewById(R.id.client_subscription_maxlessonaccess);
-                client_subscription_maxlessonaccess.setText("Max Lesson Access : " + Integer.toString(clientSubscriptionMaxLessons));
+                client_subscription_maxlessonaccess.setText("Max Lesson Access : " + clientSubscriptionMaxLessons);
 
                 log_out = findViewById(R.id.logout_button);
 
@@ -255,7 +255,7 @@ public class AccountActivity extends AppCompatActivity {
     private void getUserInfo(int user_id, int clientSubscriptionId, GetUserByIDCallback callback){
 
         RequestQueue rq = Volley.newRequestQueue(AccountActivity.this);
-        String url = "https://api.becomeacookmaster.live:9000/user/" + Integer.toString(user_id);
+        String url = "https://api.becomeacookmaster.live:9000/user/" + user_id;
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
@@ -293,7 +293,7 @@ public class AccountActivity extends AppCompatActivity {
 
                             }
                         }catch (Exception e){
-                            Toast.makeText(AccountActivity.this,"ERROR 2: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AccountActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -301,7 +301,7 @@ public class AccountActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        callback.onError("%s".format(error.toString()));
+                        callback.onError(String.format(error.toString()));
                     }
                 }
         ){
@@ -318,7 +318,7 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void getSubscriptionInfo(RequestQueue rq, int subscriptionId, SubscriptionCallback sub_callback) {
-        String url = "https://api.becomeacookmaster.live:9000/subscription/" + Integer.toString(subscriptionId);
+        String url = "https://api.becomeacookmaster.live:9000/subscription/" + subscriptionId;
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
@@ -341,7 +341,7 @@ public class AccountActivity extends AppCompatActivity {
                                 sub_callback.onSuccess(subscription);
                             }
                         } catch (Exception e){
-                            sub_callback.onError(e.toString() + "ERROR làT");
+                            sub_callback.onError(e + "ERROR làT");
                         }
                     }
                 },

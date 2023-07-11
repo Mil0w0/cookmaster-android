@@ -121,7 +121,7 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                         .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();;
+                                dialog.dismiss();
                             }
                         })
                         .setNegativeButton(getResources().getString(R.string.cookmastershop), new DialogInterface.OnClickListener() {
@@ -172,18 +172,18 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                     }
                 });
 
-            txt_fidelity_points.setText("Hello " + client.getLastname() + ", you have " + Integer.toString(client.getFidelity_points()) + " fidelity points");
+            txt_fidelity_points.setText("Hello " + client.getLastname() + ", you have " + client.getFidelity_points() + " fidelity points");
                 if (client.getFidelity_points() < 50) {
-                    needed_points.setText("You need " + Integer.toString(50 - client.getFidelity_points()) + " points to unlock the next stage");
+                    needed_points.setText("You need " + (50 - client.getFidelity_points()) + " points to unlock the next stage");
 
                 } else if (client.getFidelity_points() < 110) {
                     stage50.setColorFilter(filter_color);
-                    needed_points.setText("You need " + Integer.toString(110 - client.getFidelity_points()) + " points to unlock the next stage");
+                    needed_points.setText("You need " + (110 - client.getFidelity_points()) + " points to unlock the next stage");
 
                 } else if (client.getFidelity_points() < 180) {
                     stage50.setColorFilter(filter_color);
                     stage110.setColorFilter(filter_color);
-                    needed_points.setText("You need " + Integer.toString(180 - client.getFidelity_points()) + " points to unlock the next stage");
+                    needed_points.setText("You need " + (180 - client.getFidelity_points()) + " points to unlock the next stage");
                 } else {
                     stage50.setColorFilter(filter_color);
                     stage110.setColorFilter(filter_color);
@@ -214,11 +214,7 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                 Date date = new Date();
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                 String today = formatter.format(date);
-                if (lastTime.equals(today)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return lastTime.equals(today);
             }
         } else {
             return false;
@@ -267,7 +263,6 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                     }
                 }
             }
-            Toast.makeText(this, Integer.toString(nfc_identity), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "NFC intent received but no tag discovered!", Toast.LENGTH_LONG).show();
         }
@@ -286,7 +281,7 @@ public class FidelityOverviewActivity extends AppCompatActivity {
         btn_secret.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasAlreadyPlayed(user_id, nfc_identity) == false) {
+                if (!hasAlreadyPlayed(user_id, nfc_identity)) {
                     Intent intent = new Intent(FidelityOverviewActivity.this, FidelityGameActivity.class);
                     intent.putExtra("user_id", user_id);
                     intent.putExtra("fidelitypoints", client.getFidelity_points());
@@ -306,7 +301,7 @@ public class FidelityOverviewActivity extends AppCompatActivity {
     private void getFidelityPoints(int user_id, FidelityCallback callback) {
 
             RequestQueue rq = Volley.newRequestQueue(FidelityOverviewActivity.this);
-            String url = "https://api.becomeacookmaster.live:9000/client/" + Integer.toString(user_id);
+            String url = "https://api.becomeacookmaster.live:9000/client/" + user_id;
 
             StringRequest query = new StringRequest(Request.Method.GET,
                     url,
@@ -328,14 +323,14 @@ public class FidelityOverviewActivity extends AppCompatActivity {
                                     callback.onSuccess(id, lastname, firstname, email, fidelitypoints);
                                 }
                             }catch (Exception e){
-                                Toast.makeText(FidelityOverviewActivity.this,"ERROR 2: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(FidelityOverviewActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
                             }
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(FidelityOverviewActivity.this,"ERROR: %s".format(error.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FidelityOverviewActivity.this, String.format(error.toString()) , Toast.LENGTH_SHORT).show();
                         }
                     }
             ){

@@ -3,9 +3,9 @@ package com.example.cookmaster_at_home_app;
 public class Client {
     private String isblocked;
     private String role;
-    private int id;
+    private final int id;
 
-    private String email;
+    private final String email;
     private int language;
     private String profilepicture;
     private String firstname;

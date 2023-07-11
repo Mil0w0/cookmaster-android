@@ -77,13 +77,13 @@ public class RewardsActivity extends AppCompatActivity {
 
                         switch (reward) {
                             //Replace with the correct values after testing
-                            case 1:
+                            case 50:
                                 listItems50.add(new Item(id, name, image,description, price, reward, stock));
                                 break;
-                            case 2:
+                            case 110:
                                 listItems110.add(new Item(id, name, image,description, price, reward, stock));
                                 break;
-                            case 3:
+                            case 180:
                                 listItems180.add(new Item(id, name, image,description, price, reward, stock));
                                 break;
                         }
@@ -152,7 +152,7 @@ public class RewardsActivity extends AppCompatActivity {
                             callback.onSuccess(json);
 
                         }catch (Exception e){
-                            Toast.makeText(RewardsActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RewardsActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
                         }
                     }
                 },

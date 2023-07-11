@@ -22,8 +22,8 @@ import java.util.List;
 
 public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHolder> {
 
-    private List<Item> itemList;
-    private Context context;
+    private final List<Item> itemList;
+    private final Context context;
     public RewardsAdapter(List<Item> itemList, Context context) {
         this.itemList = itemList;
         this.context = context;
@@ -42,7 +42,7 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHo
         holder.itemName.setText(item.getName());
         String url_image = "https://becomeacookmaster.live/assets/images/shop-items/" + item.getImage();
         Picasso.get().load(url_image).into(holder.itemImage);
-        if (item.getStock() == 49){
+        if (item.getStock() == 0){
             ColorMatrix matrix = new ColorMatrix();
             matrix.setSaturation(0);
             ColorMatrixColorFilter filter_color = new ColorMatrixColorFilter(matrix);
@@ -51,9 +51,8 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (item.getStock() == 49){
+                if (item.getStock() == 0){
                     Toast.makeText(context, "This item is out of stock!", Toast.LENGTH_SHORT).show();
-                    return;
                 } else {
                     Bundle bundle = ((RewardsActivity) context).getIntent().getExtras();
                     int user_id = bundle.getInt("user_id", -1);

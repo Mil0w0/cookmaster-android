@@ -1,8 +1,13 @@
 package com.example.cookmaster_at_home_app;
 
 public class Item {
-    private String name, image, description;
-    private int id,price, stock, reward;
+    private final String name;
+    private final String image;
+    private final String description;
+    private final int id;
+    private final int price;
+    private final int stock;
+    private final int reward;
 
     public Item(int id, String name, String image, String description, int price, int stock, int reward) {
         this.name = name;

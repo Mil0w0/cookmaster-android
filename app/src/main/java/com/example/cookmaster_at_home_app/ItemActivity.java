@@ -140,7 +140,7 @@ public class ItemActivity extends AppCompatActivity {
 
         RequestQueue rq = Volley.newRequestQueue(ItemActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/shopitem/" + Integer.toString(item_id);
+        String url = "https://api.becomeacookmaster.live:9000/shopitem/" + item_id;
 
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.PATCH ,url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
@@ -153,7 +153,7 @@ public class ItemActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ItemActivity.this, "ERROR 3: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ItemActivity.this, String.format(error.toString()), Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -175,7 +175,7 @@ public class ItemActivity extends AppCompatActivity {
 
         RequestQueue rq = Volley.newRequestQueue(ItemActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/client/" + Integer.toString(user_id);
+        String url = "https://api.becomeacookmaster.live:9000/client/" + user_id;
 
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.PATCH ,url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
@@ -188,7 +188,7 @@ public class ItemActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ItemActivity.this, "ERROR 3: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ItemActivity.this, String.format(error.toString()), Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -223,7 +223,7 @@ public class ItemActivity extends AppCompatActivity {
 
         RequestQueue rq = Volley.newRequestQueue(ItemActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/shopitem/"+ Integer.toString(item_id);
+        String url = "https://api.becomeacookmaster.live:9000/shopitem/"+ item_id;
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
@@ -245,7 +245,7 @@ public class ItemActivity extends AppCompatActivity {
                             item_reserved.onSuccess(name, description, image, price, reward, stock);
 
                         }catch (Exception e){
-                            Toast.makeText(ItemActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ItemActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
                         }
                     }
                 },

@@ -156,8 +156,29 @@ public class FidelityGameActivity extends AppCompatActivity {
 
                 } else {
                     if (tryCount++ == 1){
+                        try {
+                            SharedPreferences sharedPreferences = getSharedPreferences("fidelity-game", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                            Date date = new Date();
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                            String dateSimple = formatter.format(date);
+                            editor.putString(Integer.toString(user_id), dateSimple);
+                            editor.apply();
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(FidelityGameActivity.this, "Wrong answer, Try again tomorrow !", Toast.LENGTH_SHORT).show();
+
                         Intent intent = new Intent(FidelityGameActivity.this, FidelityOverviewActivity.class);
+                        intent.putExtra("user_id", user_id);
+                        intent.putExtra("subscription_id", subscriptionId);
+                        intent.putExtra("auto_reconnect", auto_reconnect);
                         startActivity(intent);
+
+                        return;
                     }
                     answerFG.setText("");
                     Toast.makeText(FidelityGameActivity.this, "Wrong answer, you have one more try!", Toast.LENGTH_SHORT).show();
@@ -174,7 +195,7 @@ public class FidelityGameActivity extends AppCompatActivity {
 
         RequestQueue rq = Volley.newRequestQueue(FidelityGameActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/client/" + Integer.toString(user_id);
+        String url = "https://api.becomeacookmaster.live:9000/client/" + user_id;
 
         JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.PATCH ,url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
@@ -185,7 +206,7 @@ public class FidelityGameActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(FidelityGameActivity.this, "ERROR 3: %s".format(error.toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FidelityGameActivity.this, String.format(error.toString()), Toast.LENGTH_SHORT).show();
             }
         }){
             @Override

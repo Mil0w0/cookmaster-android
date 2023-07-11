@@ -6,14 +6,14 @@ import com.android.volley.toolbox.Volley;
 import java.util.List;
 
 public class Lesson {
-    private String name;
-    private int id;
-    private String description;
-    private String image;
-    private int difficulty;
-    private String content;
-    private String author;
-    private int group;
+    private final String name;
+    private final int id;
+    private final String description;
+    private final String image;
+    private final int difficulty;
+    private final String content;
+    private final String author;
+    private final int group;
 
     public Lesson(String name, int id, String description, String image, int difficulty, String content, String author, int group_id) {
         this.name = name;
@@ -25,17 +25,6 @@ public class Lesson {
         this.author = author;
         this.group = group_id;
     }
-
-    public Lesson(String name, int id, String description, String image, int difficulty, String content, int group_id) {
-        this.name = name;
-        this.id = id;
-        this.description = description;
-        this.image = image;
-        this.difficulty = difficulty;
-        this.content = content;
-        this.group = group_id;
-    }
-
     public String getName() {
         return name;
     }

@@ -46,6 +46,7 @@ public class LessonActivity extends AppCompatActivity {
     private List<Lesson> GroupLessons;
 
     private ImageView lesson_image;
+    private boolean auto_reconnect;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +67,7 @@ public class LessonActivity extends AppCompatActivity {
         int clientSubscriptionId = extras.getInt("subscription_id");
         String clientSubscriptionName = extras.getString("subscription_name");
         int clientSubscriptionMaxLessons = extras.getInt("subscription_maxlessonaccess");
-        boolean auto_reconnect = extras.getBoolean("auto_reconnect");
+        auto_reconnect = extras.getBoolean("auto_reconnect");
 
         settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -142,9 +143,11 @@ public class LessonActivity extends AppCompatActivity {
 
                                             nextPage.putExtra("fullname", clientFullname);
                                             nextPage.putExtra("user_id", clientId);
+                                            nextPage.putExtra("subscription_id", clientSubscriptionId);
                                             nextPage.putExtra("email", clientEmail);
                                             nextPage.putExtra("subscription_name", clientSubscriptionName);
                                             nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
+                                            nextPage.putExtra("auto_reconnect", auto_reconnect);
 
                                             startActivity(nextPage);
                                         } else {
@@ -192,7 +195,7 @@ public class LessonActivity extends AppCompatActivity {
                 nextPage.putExtra("email", clientEmail);
                 nextPage.putExtra("subscription_name", clientSubscriptionName);
                 nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
-                //group/image/ytb to add?
+                nextPage.putExtra("auto_reconnect", auto_reconnect);
                 startActivity(nextPage);
             }
         });
@@ -200,7 +203,7 @@ public class LessonActivity extends AppCompatActivity {
     private void hasAlreadyWatchLesson(int clientId, Lesson lesson, AlreadyWatchedCallback callback) {
         RequestQueue rq = Volley.newRequestQueue(LessonActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/watch/" + Integer.toString(clientId) + "/" + Integer.toString(lesson.getId());
+        String url = "https://api.becomeacookmaster.live:9000/lesson/watch/" + clientId + "/" + lesson.getId();
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
@@ -213,7 +216,7 @@ public class LessonActivity extends AppCompatActivity {
                             boolean alreadyWatched = jsonResponse.getBoolean("iswatched");
                             callback.onSuccess(alreadyWatched, lesson);
                         } catch (Exception e) {
-                            Toast.makeText(LessonActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonActivity.this, String.format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -242,7 +245,7 @@ public class LessonActivity extends AppCompatActivity {
 
     private void countClientWatchedLessons(RequestQueue rq, int clientId, LessonClientCallback callback) {
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + Integer.toString(clientId);
+        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + clientId;
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
@@ -256,7 +259,7 @@ public class LessonActivity extends AppCompatActivity {
                             int lessonWatched = jsonResponse.getInt("count");
                             callback.onSuccess(lessonWatched, GroupLessons);
                         } catch (Exception e) {
-                            Toast.makeText(LessonActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonActivity.this, String.format(e.toString()), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -285,7 +288,7 @@ public class LessonActivity extends AppCompatActivity {
 
     private void updateClientWatchedLessons(RequestQueue rq, int clientId){
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + Integer.toString(clientId);
+        String url = "https://api.becomeacookmaster.live:9000/lesson/views/" + clientId;
 
         StringRequest query = new StringRequest(Request.Method.DELETE,
                 url,
@@ -342,7 +345,7 @@ public class LessonActivity extends AppCompatActivity {
                         nextPage.putExtra("email", clientEmail);
                         nextPage.putExtra("subscription_name", clientSubscriptionName);
                         nextPage.putExtra("subscription_maxlessonaccess", clientSubscriptionMaxLessons);
-                        //group/image/ytb to add?
+                        nextPage.putExtra("auto_reconnect", auto_reconnect);
                         startActivity(nextPage);
                     }
                 })
@@ -360,20 +363,13 @@ public class LessonActivity extends AppCompatActivity {
 
         RequestQueue rq = Volley.newRequestQueue(LessonActivity.this);
 
-        String url = "https://api.becomeacookmaster.live:9000/client/watch/" + Integer.toString(clientId) + "/" + Integer.toString(lessonId);
+        String url = "https://api.becomeacookmaster.live:9000/client/watch/" + clientId + "/" + lessonId;
         StringRequest query = new StringRequest(Request.Method.PATCH,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-                        try {
-//                            JSONObject jsonResponse = new JSONObject(response);
-//                            String message = jsonResponse.getString("message");
-//                            Toast.makeText(LessonActivity.this, message, Toast.LENGTH_SHORT).show();
-                        } catch (Exception e) {
-                            Toast.makeText(LessonActivity.this, "ERROR 1: %s".format(e.toString()), Toast.LENGTH_SHORT).show();
-                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -403,7 +399,7 @@ public class LessonActivity extends AppCompatActivity {
         RequestQueue rq = Volley.newRequestQueue(LessonActivity.this);
         List<Lesson> list = new ArrayList<>();
 
-        String url = "https://api.becomeacookmaster.live:9000/lesson/group/" + Integer.toString(groupId);
+        String url = "https://api.becomeacookmaster.live:9000/lesson/group/" + groupId;
 
         StringRequest query = new StringRequest(Request.Method.GET,
                 url,
@@ -423,13 +419,15 @@ public class LessonActivity extends AppCompatActivity {
                                 String description = obj.getString("description");
                                 int difficulty = obj.getInt("difficulty");
                                 String content = obj.getString("content");
+                                String firstname = obj.getString("firstname");
+                                String lastname = obj.getString("lastname");
                                 int group = obj.getInt("idlessongroup");
                                 String image = obj.getString("picture");
-                                list.add(new Lesson(name, id, description, image, difficulty, content,group));
+                                list.add(new Lesson(name, id, description, image, difficulty, content, firstname+" " +lastname, group));
                                 callback.onSuccess(list);
                             }
                         }catch (Exception e){
-                            Toast.makeText(LessonActivity.this,"ERROR1: %s".format(e.toString()) , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonActivity.this, String.format(e.toString()) , Toast.LENGTH_SHORT).show();
                         }
                     }
                 },

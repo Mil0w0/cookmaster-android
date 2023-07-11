@@ -12,8 +12,8 @@ import android.widget.TextView;
 import java.util.List;
 
 public class LessonAdapter extends BaseAdapter {
-    private List<Lesson> list;
-    private Context context;
+    private final List<Lesson> list;
+    private final Context context;
 
     public LessonAdapter(List<Lesson> list, Context context) {
         this.list = list;
