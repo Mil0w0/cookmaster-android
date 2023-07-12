@@ -53,11 +53,11 @@ public class FidelityGameActivity extends AppCompatActivity {
 
         int user_id = getIntent().getIntExtra("user_id", -1);
         int subscriptionId = getIntent().getIntExtra("subscription_id", -1);
-        int fidelityPoints = getIntent().getIntExtra("fidelitypoints", 0);
+        int fidelityPoints = getIntent().getIntExtra("fidelitypoints", -1);
         boolean auto_reconnect = getIntent().getBooleanExtra("auto_reconnect", false);
         int nfc_identity = getIntent().getIntExtra("nfc_identity", -1);
 
-        if (fidelityPoints == 0 || user_id == -1 || subscriptionId == -1) {
+        if (fidelityPoints == -1 || user_id == -1 || subscriptionId == -1) {
             Toast.makeText(FidelityGameActivity.this, "Error, please log in again", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(FidelityGameActivity.this, LoginActivity.class);
             startActivity(intent);
